@@ -10,12 +10,12 @@ receiverType: bc780
 #
 serialPort: /dev/bogus
 #
-dataDirectory: /Users/gsc/elephant
+#dataDirectory: /Users/gsc/elephant
+dataDirectory: /home/gsc/elephant
 #
 runMode: once
 #runMode: always
 #
 frequencyBands:
-    - 1
-    - 3
+    - 11
 #

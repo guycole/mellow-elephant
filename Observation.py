@@ -5,6 +5,7 @@
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
+import time
 import uuid
 
 from datetime import datetime
@@ -14,7 +15,7 @@ class Observation:
 		self.frequency = frequency
 		self.observationId = str(uuid.uuid4())
 		self.sample = sample
-		self.timeStampMs = 1000 * int((datetime.utcnow()-datetime(1970,1,1)).total_seconds())
+		self.timeStampMs = int(1000 * time.time())
 
 	def toDictionary(self):
 		result = {}
