@@ -1,10 +1,10 @@
 #
 # Title:Sortie.py
 # Description:sortie container
-# Development Environment:OS X 10.9.3/Python 2.7
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
+
 import uuid
 
 from datetime import datetime
@@ -23,3 +23,13 @@ class Sortie:
 		result['timeStampMs'] = self.timeStampMs
 		result['installationId'] = self.installationId
 		return(result)
+
+	def getDirectory(self, dataDirectory):
+		return dataDirectory + "/" + self.sortieId
+
+	def getPickledSortieName(self, dataDirectory):
+		return dataDirectory + "/" + self.sortieId + "/sortie.p"
+
+	def getPickledObservationName(self, dataDirectory, bandNdx):
+		filename = "/observation%d.p" % bandNdx
+		return dataDirectory + "/" + self.sortieId + filename

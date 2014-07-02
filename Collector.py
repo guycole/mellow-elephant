@@ -11,12 +11,20 @@ import yaml
 
 from ReceiverFactory import ReceiverFactory
 
-from TaskFactory import TaskFactory
+from Task import Task
 
 class Collector:
 
-	def execute(self, task):
-		task.execute()
+	def execute(self, task, runMode):
+		print "runMode:%s" % runMode
+
+		if runMode == 'once':
+			task.execute()
+		elif runMode == 'always':
+			while True:
+				task.execute()
+		else:
+			print "unsupported run mode:%s" % runMode
 
 print 'start'
 
@@ -27,7 +35,7 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		fileName = sys.argv[1]
 	else:
-		fileName = "config.yaml"
+		fileName = "test.yaml"
 
 	configuration = yaml.load(file(fileName))
 
@@ -46,10 +54,9 @@ if __name__ == '__main__':
 	receiverFactory = ReceiverFactory()
 	receiver = receiverFactory.factory(receiverType, serialPort)
 
-	taskFactory = TaskFactory()
-	task = taskFactory.factory(configuration['task'], receiver)
+	task = Task(configuration['frequencyBands'], receiver, installationId, dataDirectory, homeUrl)
 
 	collector = Collector()
-	collector.execute(task)
+	collector.execute(task, configuration['runMode'])
 
 print 'stop'
