@@ -1,7 +1,7 @@
 #
 # Title:AuthorizeTest.py
 # Description:discover if this installation is on the white list
-# Development Environment:OS X 10.9.3/Python 2.7
+# Development Environment:OS X 10.9.3/Python 2.7.7
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #

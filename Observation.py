@@ -11,7 +11,8 @@ import uuid
 from datetime import datetime
 
 class Observation:
-	def __init__(self, frequency=0, sample=0):
+	def __init__(self, frequency=0, sample=0, band=0):
+		self.band = band
 		self.frequency = frequency
 		self.observationId = str(uuid.uuid4())
 		self.sample = sample
@@ -19,6 +20,7 @@ class Observation:
 
 	def toDictionary(self):
 		result = {}
+		result['band'] = self.band
 		result['frequency'] = self.frequency
 		result['sample'] = self.sample
 		result['timeStampMs'] = self.timeStampMs

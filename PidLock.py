@@ -1,5 +1,5 @@
 #
-# Title:pid_lock.py
+# Title:PidLock.py
 # Description:ensure only a single instance runs
 # Development Environment:Ubuntu 10.04 LTS/Python 2.6.5
 # Legalise:Copyright (C) 2013 Digital Burro, INC.
@@ -9,12 +9,12 @@ import os
 
 class PidLock:
 
-    def lockTest(self, file_name):
+    def lockTest(self, fileName):
         """
         Return True if active lock noted
         """
         try:
-            infile = open(file_name, 'r')
+            infile = open(fileName, 'r')
             target_pid = int(infile.readline())
             infile.close()
         except IOError:
@@ -30,11 +30,11 @@ class PidLock:
 
         return False
 
-    def writeLock(self, file_name):
+    def writeLock(self, fileName):
         """
         write a PID lock file
         """
-        outfile = open(file_name, 'w')
+        outfile = open(fileName, 'w')
         outfile.write("%d\n" % (os.getpid()))
         outfile.close()
 

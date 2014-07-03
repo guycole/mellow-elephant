@@ -5,17 +5,15 @@
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
+import os
+import time
+
 from Observation import Observation
 from Receiver import Receiver
 
 class ReceiverBc780(Receiver):
 	def __init__(self, receiverProxy):
 		Receiver.__init__(self, 'bc780', receiverProxy)
-
-	def sampleFrequency(self, frequency):
-		print 'sample frequency:%d' % frequency
-		return(Observation(frequency, 123))
-
 	def invokeRadio(self, command, argz):
 		"""
 		invoke the external command line utility and return response
@@ -100,34 +98,36 @@ class ReceiverBc780(Receiver):
 
 		while ((exitFlag == False) and (errorCounter < 10)):
 			temp1 = os.popen(command).readlines()
+			print "%s" % (temp1)
+
 			temp2 = temp1[0]
 
-		try:
-			ndx1 = temp2.rindex('S')
-			ndx2 = temp2.index(' ', ndx1)
-			strength = temp2[ndx1+1:ndx2]
+			try:
+				ndx1 = temp2.rindex('S')
+				ndx2 = temp2.index(' ', ndx1)
+				strength = temp2[ndx1+1:ndx2]
 
-			ndx1 = temp2.rindex('F')
-			ndx2 = temp2.index('\n', ndx1)
-			frequency = temp2[ndx1+1:ndx2]
+				ndx1 = temp2.rindex('F')
+				ndx2 = temp2.index('\n', ndx1)
+				frequency = temp2[ndx1+1:ndx2]
 
-			return [int(strength), long(frequency)]
-		except ValueError:
-			print "--------------->receiver sample parse error noted"
-			print command
-			print temp2
+				return [int(strength), long(frequency)]
+			except ValueError:
+				print "--------------->receiver sample parse error noted"
+				print command
+				print temp2
 
-			time.sleep(1)
-			errorCounter += 1
+				time.sleep(1)
+				errorCounter += 1
 
-	print "--------------->receiver sample errors exceed retry limit"
-	return([0, 0])
+		print "--------------->receiver sample errors exceed retry limit"
+		return([0, 0])
 
 	def sampleRadio(self, frequency):
 		"""
 		tune to frequency and sample signal strength
-    return tuple of frequency, strength and modulation
-    """
+		return tuple of frequency, strength and modulation
+		"""
 		time.sleep(1)
 		self.tuneRadio(frequency)
 
@@ -137,11 +137,7 @@ class ReceiverBc780(Receiver):
 		time.sleep(1)
 		sample = self.getRawSample()
 
-		result = [sample[1], sample[0], modulation]
-
-	def sampleFrequency(self, frequency):
-		print 'sample frequency:%d' % frequency
-		return(Observation(frequency, 123))
+		return([sample[1], sample[0], modulation])
 
 	def sampleBand(self, band):
 		print 'sample band:%f %f' % (band.frequencyLow, band.frequencyHigh)
@@ -155,9 +151,11 @@ class ReceiverBc780(Receiver):
 		resultList = []
 		currentFrequency = lowFreq
 		while currentFrequency < highFreq:
-			resultList.append(self.sampleFrequency(currentFrequency))
+			tempList = self.sampleRadio(currentFrequency)
+			observation = Observation(currentFrequency, tempList[1], band.bandNdx)
+			resultList.append(observation)
 			currentFrequency += stepFreq
-
+			
 		return(resultList)
 
 #
@@ -166,14 +164,13 @@ class ReceiverBc780(Receiver):
 print 'start'
 
 if __name__ == '__main__':
-	rx = ReceiverBc780('/stub')
-
+	rx = ReceiverBc780('/home/gsc/git/mellow-elephant-py/bin/sampler1a')
 	if (rx.testRadio()):
 		print 'radio test OK'
-		print rx.tuneRadio(124.1)
+		print rx.tuneRadio(1241000)
 		print rx.getModulation()
 		print rx.getRawSample()
-		print rx.sampleRadio(124.1)
+		print rx.sampleRadio(1241000)
 	else:
 		print 'radio test failure'
 

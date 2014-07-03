@@ -1,18 +1,21 @@
 #
-installationId: 51906849-d546-4358-ac5c-66936323e7e9
-#installationId: 688a28d1-b3b6-4147-bc9f-28215c9461c0
+installationId: changeme
 #
-#homeUrl: http://digiburo.com/hal/mellow-elephant1.json
-homeUrl: http://digiburo.com/hal/mellow-elephant-test1.json
+homeUrl: http://digiburo.com/hal/mellow-elephant1.json
+#homeUrl: http://digiburo.com/hal/mellow-elephant-test1.json
 #
 # legal receiver types: bc780
 receiverType: bc780
 #
-serialPort: /dev/bogus
+receiverProxy: /home/gsc/git/mellow-elephant-py/bin/sampler1a
 #
-dataDirectory: /tmp
+#dataDirectory: /Users/gsc/elephant
+dataDirectory: /home/gsc/elephant
 #
-task:
+runMode: once
+#runMode: always
+#
+frequencyBands:
     - 1
     - 2
     - 3

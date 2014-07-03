@@ -35,7 +35,7 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		fileName = sys.argv[1]
 	else:
-		fileName = "test.yaml"
+		fileName = "config.yaml"
 
 	configuration = yaml.load(file(fileName))
 

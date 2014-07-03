@@ -12,7 +12,7 @@ class UploadSortie:
 
 	def execute(self, sortie, sortieUrl):
 		"""
-			upload sortie
+		upload sortie
 		"""
 		payload = json.dumps(sortie.toDictionary())
 

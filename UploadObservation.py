@@ -1,7 +1,7 @@
 #
 # Title:UploadObservation.py
 # Description:Mellow Elephant
-# Development Environment:OS X 10.9.3/Python 2.7
+# Development Environment:OS X 10.9.3/Python 2.7.7
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
@@ -10,14 +10,10 @@ import urllib2
 
 class UploadObservation:
 
-	def execute(self, observations, sortie, observationUrl):
+	def upload(self, observationList, sortie, observationUrl):
 		"""
-			upload observation
+		perform upload
 		"""
-		observationList = []
-		for item in observations:
-			observationList.append(item.toDictionary())
-
 		message = {}
 		message['installationId'] = sortie.installationId
 		message['sortieId'] = sortie.sortieId
@@ -40,3 +36,29 @@ class UploadObservation:
 			print 'UploadSortie exception:' + observationUrl
 
 		return False
+
+	def execute(self, observations, sortie, observationUrl):
+		"""
+		upload observation
+		"""
+		result = False
+		counter = 0
+		observationList = []
+		for item in observations:
+			observationList.append(item.toDictionary())
+
+			if counter > 100:
+				result = self.upload(observationList, sortie, observationUrl)
+				if result:
+					counter = 0
+					observationList = []
+				else:
+					print 'observation upload failure noted'
+					return result
+			else:
+				counter += 1
+
+		if len(observationList) > 0:
+			result = self.upload(observationList, sortie, observationUrl)
+
+		return result

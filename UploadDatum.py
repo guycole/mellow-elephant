@@ -2,7 +2,7 @@
 #
 # Title:UploadDatum.py
 # Description:Mellow Elephant data upload
-# Development Environment:OS X 10.9.3/Python 2.7
+# Development Environment:OS X 10.9.3/Python 2.7.7
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
@@ -71,10 +71,11 @@ class UploadDatum:
 			sortieFiles = self.discoverSorties()
 			for sortieFile in sortieFiles:
 				sortie = pickle.load(open(sortieFile, "rb"))
+				print "current installation:%s" % sortie.installationId
 				print "current sortie:%s" % sortie.sortieId
 
 				authorizeTest = AuthorizeTest()
-				if authorizeTest.execute(sortie.sortieId, getHome.getAuthorizeUrl()):
+				if authorizeTest.execute(sortie.installationId, getHome.getAuthorizeUrl()):
 					self.writeObservations(sortie, getHome.getObservationUrl())
 					self.writeSortie(sortie, getHome.getSortieUrl())
 				else:
@@ -89,7 +90,7 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		fileName = sys.argv[1]
 	else:
-		fileName = "test.yaml"
+		fileName = "config.yaml"
 
 	configuration = yaml.load(file(fileName))
 
