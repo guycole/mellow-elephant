@@ -9,6 +9,7 @@
 import sys
 import yaml
 
+from PidLock import PidLock
 from ReceiverFactory import ReceiverFactory
 
 from Task import Task
@@ -56,7 +57,18 @@ if __name__ == '__main__':
 
 	task = Task(configuration['frequencyBands'], receiver, installationId, dataDirectory, homeUrl)
 
-	collector = Collector()
-	collector.execute(task, configuration['runMode'])
+	pidLockPath = configuration['pidLockPath']
+	print pidLockPath
+
+	pidFile = "%s/Collector" % pidLockPath
+	pidLock = PidLock()
+	if pidLock.lockTest(pidFile):
+		print 'pid lock noted'
+	else:
+		print 'pid lock fail'
+		pidLock.writeLock(pidFile)
+
+		collector = Collector()
+		collector.execute(task, configuration['runMode'])
 
 print 'stop'
