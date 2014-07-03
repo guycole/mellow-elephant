@@ -49,10 +49,10 @@ if __name__ == '__main__':
 	print homeUrl
 
 	receiverType = configuration['receiverType']
-	serialPort = configuration['serialPort']
+	receiverProxy = configuration['receiverProxy']
 
 	receiverFactory = ReceiverFactory()
-	receiver = receiverFactory.factory(receiverType, serialPort)
+	receiver = receiverFactory.factory(receiverType, receiverProxy)
 
 	task = Task(configuration['frequencyBands'], receiver, installationId, dataDirectory, homeUrl)
 

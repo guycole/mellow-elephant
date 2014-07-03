@@ -8,7 +8,7 @@ homeUrl: http://digiburo.com/hal/mellow-elephant-test1.json
 # legal receiver types: bc780
 receiverType: bc780
 #
-serialPort: /dev/bogus
+receiverProxy: /dev/bogus
 #
 #dataDirectory: /Users/gsc/elephant
 dataDirectory: /home/gsc/elephant

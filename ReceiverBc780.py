@@ -9,9 +9,8 @@ from Observation import Observation
 from Receiver import Receiver
 
 class ReceiverBc780(Receiver):
-	def __init__(self, serialPort):
-		Receiver.__init__(self, 'bc780', serialPort)
-		print 'rx bc780 ctor'
+	def __init__(self, receiverProxy):
+		Receiver.__init__(self, 'bc780', receiverProxy)
 
 	def sampleFrequency(self, frequency):
 		print 'sample frequency:%d' % frequency
@@ -21,10 +20,10 @@ class ReceiverBc780(Receiver):
 		"""
 		invoke the external command line utility and return response
 		"""
-		command_line = "%s %s%s" % (self.uniden_utility, command, argz)
-		print command_line
+		commandLine = "%s %s%s" % (self.receiverProxy, command, argz)
+		print commandLine
 
-		temp1 = os.popen(command_line).readlines()
+		temp1 = os.popen(commandLine).readlines()
 		temp2 = temp1[0]
 
 		try:
@@ -54,16 +53,16 @@ class ReceiverBc780(Receiver):
 		"""
 		argz = "%8.8d?" % (frequency)
 
-		exit_flag = False
-		error_counter = 0
+		exitFlag = False
+		errorCounter = 0
 
-		while ((exit_flag == False) and (error_counter < 10)):
+		while ((exitFlag == False) and (errorCounter < 10)):
 			result = self.invokeRadio("RF", argz)
 
 			if result == 'NONE':
 				print "--------------->receiver tune parse error noted"
 				time.sleep(1)
-				error_counter += 1
+				errorCounter += 1
 			else:
 				return(result[2:])
 
@@ -74,16 +73,16 @@ class ReceiverBc780(Receiver):
 		"""
 		return current modulation mode
 		"""
-		exit_flag = False
-		error_counter = 0
+		exitFlag = False
+		errorCounter = 0
 
-		while ((exit_flag == False) and (error_counter < 10)):
+		while ((exitFlag == False) and (errorCounter < 10)):
 			result = self.invokeRadio("RM", "")
 
 			if result == 'NONE':
 				print "--------------->receiver modulation parse error noted"
 				time.sleep(1)
-				error_counter += 1
+				errorCounter += 1
 			else:
 				return(result[3:])
 
@@ -94,12 +93,12 @@ class ReceiverBc780(Receiver):
 		"""
 		return current sample (signal strength and integer frequency)
 		"""
-		exit_flag = False
-		error_counter = 0
+		exitFlag = False
+		errorCounter = 0
 
-		command = "%s SG" % (self.uniden_utility)
+		command = "%s SG" % (self.receiverProxy)
 
-		while ((exit_flag == False) and (error_counter < 10)):
+		while ((exitFlag == False) and (errorCounter < 10)):
 			temp1 = os.popen(command).readlines()
 			temp2 = temp1[0]
 
@@ -119,31 +118,26 @@ class ReceiverBc780(Receiver):
 			print temp2
 
 			time.sleep(1)
-			error_counter += 1
+			errorCounter += 1
 
 	print "--------------->receiver sample errors exceed retry limit"
-	return [0, 0]
+	return([0, 0])
 
-def sampleRadio(self, frequency, verbose):
-        """
-        tune to frequency and sample signal strength
-        return tuple of frequency, strength and modulation
-        """
-        time.sleep(1)
-        self.tuneRadio(frequency)
+	def sampleRadio(self, frequency):
+		"""
+		tune to frequency and sample signal strength
+    return tuple of frequency, strength and modulation
+    """
+		time.sleep(1)
+		self.tuneRadio(frequency)
 
-        time.sleep(1)
-        modulation = self.getModulation()
+		time.sleep(1)
+		modulation = self.getModulation()
 
-        time.sleep(1)
-        sample = self.getRawSample()
+		time.sleep(1)
+		sample = self.getRawSample()
 
-        result = [sample[1], sample[0], modulation]
-
-        if verbose:
-            print "frequency:%d signal:%d modulation:%s" % (result[0], result[1], result[2])
-
-
+		result = [sample[1], sample[0], modulation]
 
 	def sampleFrequency(self, frequency):
 		print 'sample frequency:%d' % frequency
@@ -165,3 +159,22 @@ def sampleRadio(self, frequency, verbose):
 			currentFrequency += stepFreq
 
 		return(resultList)
+
+#
+#
+#
+print 'start'
+
+if __name__ == '__main__':
+	rx = ReceiverBc780('/stub')
+
+	if (rx.testRadio()):
+		print 'radio test OK'
+		print rx.tuneRadio(124.1)
+		print rx.getModulation()
+		print rx.getRawSample()
+		print rx.sampleRadio(124.1)
+	else:
+		print 'radio test failure'
+
+print 'stop'

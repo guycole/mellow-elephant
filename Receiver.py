@@ -7,16 +7,13 @@
 #
 
 class Receiver:
-	def __init__(self, receiverType, serialPort):
+	def __init__(self, receiverType, receiverProxy):
 		print 'receiver ctor'
 		self.receiverType = receiverType
-		self.serialPort = serialPort
+		self.receiverProxy = receiverProxy
 
 	def __str__(self):
 		return self.receiverType
-
-	def openPort(self):
-		print 'open port'
 
 	def sampleBand(self, band):
 		print 'sample band:%f %f' % (band.frequencyLow, band.frequencyHigh)
