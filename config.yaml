@@ -15,8 +15,8 @@ dataDirectory: /var/mellow/elephant/observation
 #
 pidLockPath: /var/mellow/elephant/pid
 #
-runMode: once
-#runMode: always
+#runMode: once
+runMode: always
 #
 frequencyBands:
     - 1
