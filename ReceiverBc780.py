@@ -98,8 +98,6 @@ class ReceiverBc780(Receiver):
 
 		while ((exitFlag == False) and (errorCounter < 10)):
 			temp1 = os.popen(command).readlines()
-			print "%s" % (temp1)
-
 			temp2 = temp1[0]
 
 			try:

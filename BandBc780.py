@@ -14,6 +14,17 @@ class BandBc780:
 		self.modulation = modulation
 
 class BandBc780Factory:
+	def matcher(self, frequency):
+		tweakedFrequency = frequency/10000
+
+		bandNdx = 1;
+		while bandNdx < 51:
+			band = self.factory(bandNdx)
+			if tweakedFrequency > band.frequencyHigh:
+				bandNdx += 1
+			else:
+				return bandNdx;
+
 	def factory(self, bandNdx):
 		if bandNdx == 1:
 			return BandBc780(bandNdx, 25.0000, 26.9600, 5.0, 'AM')
