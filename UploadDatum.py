@@ -13,6 +13,7 @@ import yaml
 
 from AuthorizeTest import AuthorizeTest
 from GetHome import GetHome
+from PidLock import PidLock
 from UploadObservation import UploadObservation
 from UploadSortie import UploadSortie
 
@@ -100,7 +101,18 @@ if __name__ == '__main__':
 	homeUrl = configuration['homeUrl']
 	print homeUrl
 
-	uploadDatum = UploadDatum()
-	uploadDatum.execute(dataDirectory, homeUrl)
+	pidLockPath = configuration['pidLockPath']
+	print pidLockPath
+
+	pidFile = "%s/UploadDatum" % pidLockPath
+	pidLock = PidLock()
+	if pidLock.lockTest(pidFile):
+		print 'pid lock noted'
+	else:
+		print 'pid lock fail'
+		pidLock.writeLock(pidFile)
+
+		uploadDatum = UploadDatum()
+		uploadDatum.execute(dataDirectory, homeUrl)
 
 print 'stop'

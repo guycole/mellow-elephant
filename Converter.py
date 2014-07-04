@@ -25,11 +25,17 @@ from Sortie import Sortie
 class Converter:
 
 #[18427L, 82, 4045750L, '18a', '2013-02-08 02:57:38.465818-08']
+#2013-05-08 13:08:33-07
+
 	def convertTime(self, arg):
+		print arg
 		ndx = arg.rfind('-')
 		offset = arg[ndx+1:]
 
 		ndx = arg.rfind('.')
+		if ndx < 0:
+			ndx = arg.rfind('-')
+
 		temp = arg[:ndx]
 		localSeconds = time.mktime(time.strptime(temp, "%Y-%m-%d %H:%M:%S"))
 		gmtSeconds = localSeconds + int(offset) * 60 * 60
@@ -68,7 +74,7 @@ class Converter:
 
 		db = pgdb.connect(database = 'mellow_elephant1b', user = 'gsc', password = '')
 
-		passNdx = 0
+		passNdx = 62
 		while passNdx < 400:
 			sql = "select id, sample, frequency, band_key, time_stamp from raw_sample_a where pass = %d order by frequency" % (passNdx)
 			cursor = db.cursor()
