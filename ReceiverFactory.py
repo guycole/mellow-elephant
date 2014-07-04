@@ -5,17 +5,13 @@
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
-import ReceiverTest
 import ReceiverBc780
 
 class ReceiverFactory:
 
-	def factory(self, receiverType, serialPort):
-		if receiverType == 'test':
-			print 'receiver test selected'
-			return ReceiverTest.ReceiverTest()
-		elif receiverType == 'bc780':
+	def factory(self, receiverType, receiverProxy):
+		if receiverType == 'bc780':
 			print 'receiver bc780 selected'
-			return ReceiverBc780.ReceiverBc780(serialPort)
+			return ReceiverBc780.ReceiverBc780(receiverProxy)
 		else:
 			print "unknown receiverType:%s" % self.receiverType

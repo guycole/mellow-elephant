@@ -9,14 +9,23 @@
 import sys
 import yaml
 
+from PidLock import PidLock
 from ReceiverFactory import ReceiverFactory
 
-from TaskFactory import TaskFactory
+from Task import Task
 
 class Collector:
 
-	def execute(self, task):
-		task.execute()
+	def execute(self, task, runMode):
+		print "runMode:%s" % runMode
+
+		if runMode == 'once':
+			task.execute()
+		elif runMode == 'always':
+			while True:
+				task.execute()
+		else:
+			print "unsupported run mode:%s" % runMode
 
 print 'start'
 
@@ -41,15 +50,25 @@ if __name__ == '__main__':
 	print homeUrl
 
 	receiverType = configuration['receiverType']
-	serialPort = configuration['serialPort']
+	receiverProxy = configuration['receiverProxy']
 
 	receiverFactory = ReceiverFactory()
-	receiver = receiverFactory.factory(receiverType, serialPort)
+	receiver = receiverFactory.factory(receiverType, receiverProxy)
 
-	taskFactory = TaskFactory()
-	task = taskFactory.factory(configuration['task'], receiver)
+	task = Task(configuration['frequencyBands'], receiver, installationId, dataDirectory, homeUrl)
 
-	collector = Collector()
-	collector.execute(task)
+	pidLockPath = configuration['pidLockPath']
+	print pidLockPath
+
+	pidFile = "%s/Collector" % pidLockPath
+	pidLock = PidLock()
+	if pidLock.lockTest(pidFile):
+		print 'pid lock noted'
+	else:
+		print 'pid lock fail'
+		pidLock.writeLock(pidFile)
+
+		collector = Collector()
+		collector.execute(task, configuration['runMode'])
 
 print 'stop'

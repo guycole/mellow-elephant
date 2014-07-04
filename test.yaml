@@ -1,0 +1,20 @@
+#
+installationId: 688a28d1-b3b6-4147-bc9f-28215c9461c0
+#
+#homeUrl: http://digiburo.com/hal/mellow-elephant1.json
+homeUrl: http://digiburo.com/hal/mellow-elephant-test1.json
+#
+# legal receiver types: bc780
+receiverType: bc780
+#
+receiverProxy: /home/gsc/git/mellow-elephant-py/bin/sampler1a
+#
+#dataDirectory: /Users/gsc/elephant
+dataDirectory: /home/gsc/elephant
+#
+runMode: once
+#runMode: always
+#
+frequencyBands:
+    - 11
+#

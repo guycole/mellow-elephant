@@ -1,10 +1,11 @@
 #
 # Title:Sortie.py
 # Description:sortie container
-# Development Environment:OS X 10.9.3/Python 2.7
 # Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
+
+import time
 import uuid
 
 from datetime import datetime
@@ -14,7 +15,7 @@ class Sortie:
 		self.installationId = installationId
 		self.sortieId = str(uuid.uuid4())
 		self.sortieName = sortieName
-		self.timeStampMs = 1000 * int((datetime.utcnow()-datetime(1970,1,1)).total_seconds())
+		self.timeStampMs = int(1000 * time.time())
 
 	def toDictionary(self):
 		result = {}
@@ -23,3 +24,13 @@ class Sortie:
 		result['timeStampMs'] = self.timeStampMs
 		result['installationId'] = self.installationId
 		return(result)
+
+	def getDirectory(self, dataDirectory):
+		return dataDirectory + "/" + self.sortieId
+
+	def getPickledSortieName(self, dataDirectory):
+		return dataDirectory + "/" + self.sortieId + "/sortie.p"
+
+	def getPickledObservationName(self, dataDirectory, bandNdx):
+		filename = "/observation%d.p" % bandNdx
+		return dataDirectory + "/" + self.sortieId + filename
