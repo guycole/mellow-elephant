@@ -26,7 +26,7 @@ class UploadObservation:
 		request = urllib2.Request(observationUrl, payload, headers)
 
 		try:
-			response = urllib2.urlopen(request)
+			response = urllib2.urlopen(request, timeout=22)
 			result = json.loads(response.read())
 			response.close()
 
