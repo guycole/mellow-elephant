@@ -7,6 +7,7 @@
 #
 import os
 
+
 class PidLock:
 
     def lockTest(self, fileName):
@@ -56,6 +57,6 @@ if __name__ == '__main__':
 
     print 'stop'
 
-#;;; Local Variables: ***
-#;;; mode:python ***
-#;;; End: ***
+# ;;; Local Variables: ***
+# ;;; mode:python ***
+# ;;; End: ***

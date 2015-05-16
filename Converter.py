@@ -18,7 +18,7 @@ import datetime
 
 from BandBc780 import BandBc780Factory
 
-from Observation import Observation
+from observation import Observation
 from Sortie import Sortie
 
 
