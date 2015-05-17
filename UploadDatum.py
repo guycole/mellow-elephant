@@ -9,13 +9,15 @@
 import os
 import pickle
 import sys
+
 import yaml
 
 from AuthorizeTest import AuthorizeTest
 from GetHome import GetHome
-from PidLock import PidLock
 from UploadObservation import UploadObservation
 from UploadSortie import UploadSortie
+from mellow_elephant_core import PidLock
+
 
 class UploadDatum:
 

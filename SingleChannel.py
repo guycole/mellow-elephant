@@ -7,9 +7,11 @@
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import sys
+
 import yaml
 
-import PidLock
+from mellow_elephant_core import PidLock
+
 
 class SingleChannel:
 
