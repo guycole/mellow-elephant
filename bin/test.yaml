@@ -1,0 +1,17 @@
+#
+installationId: 51906849-d546-4358-ac5c-66936323e7e9
+#
+# legal receiver types: bc780
+receiverType: bc780
+#
+receiverProxy: /home/gsc/git/mellow-elephant-py/bin/sampler1a
+#
+dataDirectory: /var/mellow/elephant/observation
+#
+pidLockPath: /var/mellow/elephant/pid
+#
+runMode: once
+#
+frequencyBands:
+    - 11
+#
