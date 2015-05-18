@@ -25,7 +25,41 @@ class Receiver:
         self.receiverProxy = receiverProxy
 
     def __str__(self):
-        return self.receiverType
+        buffer = "%s:%s" % (self.receiverType, self.receiverProxy)
+        return buffer
+
+    def testRadio(self):
+        """
+        return true if radio is enabled and active
+        """
+        return False
+
+    def tuneRadio(self, frequency):
+        """
+        tune radio frequency
+        """
+        print frequency
+        return frequency
+
+    def getModulation(self):
+        """
+        return current modulation mode
+        """
+        return 'XX'
+
+    def getRawSample(self):
+        """
+        return current modulation mode
+        """
+        return [123, 1234567890]
+
+
+class ReceiverStub(Receiver):
+    def __init__(self, receiverProxy):
+        Receiver.__init__(self, 'stub', receiverProxy)
+
+    def testRadio(self):
+        return True
 
 
 class ReceiverBc780(Receiver):
@@ -39,6 +73,9 @@ class ReceiverBc780(Receiver):
         commandLine = "%s %s%s" % (self.receiverProxy, command, argz)
 
         temp1 = os.popen(commandLine).readlines()
+        if len(temp1) == 0:
+            return 'NONE'
+
         temp2 = temp1[0]
 
         try:
@@ -46,17 +83,17 @@ class ReceiverBc780(Receiver):
             ndx2 = temp2.index('\n', ndx1)
             return(temp2[ndx1:ndx2])
         except ValueError:
-            return("NONE")
+            return 'NONE'
 
     def testRadio(self):
         """
         return true if the radio is awake and responsive
         """
-        result = self.invokeRadio("SI", "")
+        result = self.invokeRadio('SI', '')
         print "::%s::" % result
 
         try:
-            ndx1 = result.index("BC780XLT")
+            ndx1 = result.index('BC780XLT')
             return True
         except ValueError:
             return False
@@ -72,17 +109,17 @@ class ReceiverBc780(Receiver):
         errorCounter = 0
 
         while ((exitFlag is False) and (errorCounter < 10)):
-            result = self.invokeRadio("RF", argz)
+            result = self.invokeRadio('RF', argz)
             print result
 
             if result == 'NONE':
-                print "--------------->receiver tune parse error noted"
+                print '--------------->receiver tune parse error noted'
                 time.sleep(1)
                 errorCounter += 1
             else:
                 return(result[2:])
 
-        print "--------------->receiver tune errors exceed retry limit"
+        print '--------------->receiver tune errors exceed retry limit'
         return 0
 
     def getModulation(self):
@@ -93,17 +130,17 @@ class ReceiverBc780(Receiver):
         errorCounter = 0
 
         while ((exitFlag is False) and (errorCounter < 10)):
-            result = self.invokeRadio("RM", "")
+            result = self.invokeRadio('RM', '')
 
             if result == 'NONE':
-                print "--------------->receiver modulation parse error noted"
+                print '--------------->receiver modulation parse error noted'
                 time.sleep(1)
                 errorCounter += 1
             else:
                 return(result[3:])
 
-        print "--------------->receiver modulation errors exceed retry limit"
-        return("NONE")
+        print '--------------->receiver modulation errors exceed retry limit'
+        return('NONE')
 
     def getRawSample(self):
         """
@@ -130,14 +167,14 @@ class ReceiverBc780(Receiver):
 
                 return [int(strength), long(frequency)]
             except ValueError:
-                print "--------------->receiver sample parse error noted"
+                print '--------------->receiver sample parse error noted'
                 print command
                 print temp2
 
             time.sleep(1)
             errorCounter += 1
 
-        print "--------------->receiver sample errors exceed retry limit"
+        print '--------------->receiver sample errors exceed retry limit'
         return [0, 0]
 
     def sampleRadio(self, frequency):
@@ -147,8 +184,8 @@ class ReceiverBc780(Receiver):
         """
         time.sleep(1)
         tuneStatus = self.tuneRadio(frequency)
-	if tuneStatus < 1:
-		print 'tune failure'
+        if tuneStatus < 1:
+            print 'tune failure'
 
         time.sleep(1)
         modulation = self.getModulation()

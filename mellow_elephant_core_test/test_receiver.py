@@ -14,11 +14,25 @@ class MyTestCase(unittest.TestCase):
         testx = receiver.Receiver('rxType', 'rxProxy')
         assert testx.receiverProxy == 'rxProxy'
         assert testx.receiverType == 'rxType'
+        assert testx.testRadio() is False
 
     def test_1(self):
         testx = receiver.ReceiverBc780('rxProxy')
         assert testx.receiverProxy == 'rxProxy'
         assert testx.receiverType == 'bc780'
+        assert testx.testRadio() is False
+
+    def test_2(self):
+        testx = receiver.ReceiverStub('rxProxy')
+        assert testx.receiverProxy == 'rxProxy'
+        assert testx.receiverType == 'stub'
+        assert testx.testRadio() is True
+        assert testx.tuneRadio(1234567890)
+        assert testx.getModulation() == 'XX'
+
+        rawSample = testx.getRawSample()
+        assert rawSample[0] == 123
+        assert rawSample[1] == 1234567890
 
 if __name__ == '__main__':
     unittest.main()

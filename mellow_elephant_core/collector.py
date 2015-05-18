@@ -1,5 +1,5 @@
 #
-# Title:collector.py
+# Title:collection.py
 # Description:Mellow Elephant collection
 # Development Environment:OS X 10.9.3/Python 2.7.7
 # Legalise:Copyright (C) 2014 Digital Burro, INC.

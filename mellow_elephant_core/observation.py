@@ -17,6 +17,11 @@ class Observation:
         self.sample = sample
         self.timeStampMs = int(1000 * time.time())
 
+    def __str__(self):
+        print self.band
+        buffer = "%d" % (123)
+        return buffer
+
     def toDictionary(self):
         result = {}
         result['band'] = self.band
