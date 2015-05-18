@@ -38,12 +38,12 @@ if __name__ == '__main__':
     receiverFactory = receiver.ReceiverFactory()
     receiver = receiverFactory.factory(receiverType, receiverProxy)
 
-    task2 = task.Task(configuration['frequencyBands'], receiver, installationId, dataDirectory)
+    currentTask = task.Task(configuration['frequencyBands'], receiver, installationId, dataDirectory)
 
     pidLockPath = configuration['pidLockPath']
     print pidLockPath
 
-    task2.execute()
+    currentTask.execute()
 
 #    pidFile = "%s/Collector" % pidLockPath
 #    pidLock = PidLock()
