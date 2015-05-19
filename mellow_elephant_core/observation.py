@@ -10,16 +10,15 @@ import uuid
 
 
 class Observation:
-    def __init__(self, frequency=0, sample=0, band=0):
-        self.band = band
+    def __init__(self, sample=0, frequency=0, bandNdx=0):
+        self.band = bandNdx
         self.frequency = frequency
         self.observationId = str(uuid.uuid4())
         self.sample = sample
         self.timeStampMs = int(1000 * time.time())
 
     def __str__(self):
-        print self.band
-        buffer = "%d" % (123)
+        buffer = "%d:%d:%d:%d" % (self.band, self.sample, self.frequency, self.timeStampMs)
         return buffer
 
     def toDictionary(self):

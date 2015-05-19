@@ -15,6 +15,8 @@ class ReceiverFactory:
         receiver = Receiver(receiverType, receiverProxy)
         if receiverType == 'bc780':
             return ReceiverBc780(receiverProxy)
+        elif receiverType == 'stub':
+            return ReceiverStub(receiverProxy)
         else:
             print "unknown receiverType:%s" % self.receiverType
 
@@ -38,7 +40,6 @@ class Receiver:
         """
         tune radio frequency
         """
-        print frequency
         return frequency
 
     def getModulation(self):
@@ -110,7 +111,6 @@ class ReceiverBc780(Receiver):
 
         while ((exitFlag is False) and (errorCounter < 10)):
             result = self.invokeRadio('RF', argz)
-            print result
 
             if result == 'NONE':
                 print '--------------->receiver tune parse error noted'
@@ -154,7 +154,6 @@ class ReceiverBc780(Receiver):
         while ((exitFlag is False) and (errorCounter < 10)):
             temp1 = os.popen(command).readlines()
             temp2 = temp1[0]
-            print temp2
 
             try:
                 ndx1 = temp2.rindex('S')
@@ -169,7 +168,7 @@ class ReceiverBc780(Receiver):
             except ValueError:
                 print '--------------->receiver sample parse error noted'
                 print command
-                print temp2
+                print temp1
 
             time.sleep(1)
             errorCounter += 1
@@ -193,7 +192,7 @@ class ReceiverBc780(Receiver):
         time.sleep(1)
         sample = self.getRawSample()
 
-        return [sample[1], sample[0], modulation]
+        return [sample[0], sample[1], modulation]
 
     def sampleBand(self, band):
         """
@@ -206,7 +205,7 @@ class ReceiverBc780(Receiver):
         while currentFrequency < band.frequencyHigh:
             tweakedFrequency = int(currentFrequency * 10000)
             sample = self.sampleRadio(tweakedFrequency)
-            currentObservation = observation.Observation(sample[1], sample[0], band.bandNdx)
+            currentObservation = observation.Observation(sample[0], sample[1], band.bandNdx)
             resultList.append(currentObservation)
             currentFrequency += stepFrequency
 

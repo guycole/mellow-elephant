@@ -9,7 +9,6 @@
 import sys
 import yaml
 
-#from mellow_elephant_core import collector
 from mellow_elephant_core import pid_lock
 from mellow_elephant_core import receiver
 from mellow_elephant_core import task
