@@ -209,9 +209,6 @@ class ReceiverBc780(Receiver):
             resultList.append(currentObservation)
             currentFrequency += stepFrequency
 
-            if len(resultList) > 10:
-                return resultList
-
         return resultList
 
 # ;;; Local Variables: ***

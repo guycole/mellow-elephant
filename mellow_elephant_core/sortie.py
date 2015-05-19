@@ -28,7 +28,7 @@ class Sortie:
         return dataDirectory + "/" + self.sortieId + "/sortie.p"
 
     def getPickledObservationName(self, dataDirectory, bandNdx):
-        filename = "/observation%d.p" % bandNdx
+        filename = "/observation%2.2d.p" % bandNdx
         return dataDirectory + "/" + self.sortieId + filename
 
 # ;;; Local Variables: ***
