@@ -35,7 +35,7 @@ class Task:
         for ndx in self.frequencyBands:
             band = bandFactory.factory(ndx)
             observations = self.receiver.sampleBand(band)
-            pickle.dump(observations, open(currentSortie.getPickledObservationName(self.dataDirectory, ndx.bandNdx), "wb"))
+            pickle.dump(observations, open(currentSortie.getPickledObservationName(self.dataDirectory, band.bandNdx), "wb"))
 
         # write sortie to signal completion
         pickle.dump(currentSortie, open(currentSortie.getPickledSortieName(self.dataDirectory), "wb"))
