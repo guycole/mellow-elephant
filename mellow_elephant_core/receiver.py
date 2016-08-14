@@ -203,7 +203,7 @@ class ReceiverBc780(Receiver):
         stepFrequency = band.frequencyStep / 1000.0
         currentFrequency = band.frequencyLow
         while currentFrequency < band.frequencyHigh:
-            tweakedFrequency = int(currentFrequency * 10000)
+            tweakedFrequency = int(round(currentFrequency * 10000))
             sample = self.sampleRadio(tweakedFrequency)
             currentObservation = observation.Observation(sample[0], sample[1], band.bandNdx)
             resultList.append(currentObservation)
