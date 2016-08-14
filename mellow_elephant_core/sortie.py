@@ -10,7 +10,11 @@ import uuid
 
 class Sortie:
     def __init__(self, sortieName):
-        self.sortieId = str(uuid.uuid4())
+        if sortieName == "default sortieName":
+            self.sortieId = str(uuid.uuid4())
+        else:
+            self.sortieId = sortieName
+
         self.sortieName = sortieName
         self.timeStampMs = int(1000 * time.time())
 
@@ -30,6 +34,7 @@ class Sortie:
     def getPickledObservationName(self, dataDirectory, bandNdx):
         filename = "/observation%2.2d.p" % bandNdx
         return dataDirectory + "/" + self.sortieId + filename
+
 
 # ;;; Local Variables: ***
 # ;;; mode:python ***

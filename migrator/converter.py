@@ -15,7 +15,6 @@ from sqlalchemy.orm import sessionmaker
 
 from pickled_band import PickledBand
 
-from sql_table import Installation
 from sql_table import Observation
 from sql_table import Sortie
 

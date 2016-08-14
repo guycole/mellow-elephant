@@ -10,35 +10,46 @@ class Discovery:
 
     def discoverSorties(self, dataDirectory):
         """
-        only directories w/a sortie file are eligible for upload
+        only directories w/a sortie.p file are ready for upload
         """
         result = []
 
         directories = os.listdir(dataDirectory)
         for directory in directories:
-            target = dataDirectory + "/" + directory + "/sortie.p"
-            if os.path.isfile(target):
+            target = "%s/%s" % (dataDirectory, directory)
+
+            test = "%s/%s/sortie.p" % (dataDirectory, directory)
+            if (os.path.isfile(test)):
                 result.append(target)
 
         return result
 
-    def discoverObservations(self, sortieFile):
+    def discoverObservations(self, sortieDirectory):
         """
-        :param sortie:
-        :return:
+        return a list of observation files
         """
         result = []
 
-        ndx = sortieFile.rfind('/')
-        tweaked = sortieFile[:ndx]
-
-        targets = os.listdir(tweaked)
+        targets = os.listdir(sortieDirectory)
         for target in targets:
-            if target.startswith('observation'):
-                fileName = tweaked + "/" + target
-                result.append(fileName)
+            target = "%s/%s" % (sortieDirectory, target)
+            result.append(target)
 
         return result
+
+    def discoverObservationName(self, fileName):
+        """
+        given a observation file name return base file name
+        """
+        ndx = 1 + fileName.rfind('/')
+        return fileName[ndx:]
+
+    def discoverSortieName(self, directory):
+        """
+        given a directory name return sortie id
+        """
+        ndx = 1 + directory.rfind('/')
+        return directory[ndx:]
 
 # ;;; Local Variables: ***
 # ;;; mode:python ***
