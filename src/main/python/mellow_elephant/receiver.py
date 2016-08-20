@@ -2,78 +2,107 @@
 # Title:receiver.py
 # Description:radio receiver classes
 # Development Environment:OS X 10.9.3/Python 2.7.7
-# Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import os
+import random
 import time
 
-from mellow_elephant_core import observation
+from observation import Observation
 
 class ReceiverFactory:
-    def factory(self, receiverType, receiverProxy):
-        receiver = Receiver(receiverType, receiverProxy)
-        if receiverType == 'bc780':
-            return ReceiverBc780(receiverProxy)
-        elif receiverType == 'stub':
-            return ReceiverStub(receiverProxy)
+    def factory(self, receiver_type, receiver_proxy):
+        if receiver_type == 'bc780':
+            return ReceiverBc780(receiver_proxy)
+        elif receiver_type == 'stub':
+            return ReceiverStub(receiver_proxy)
         else:
-            print "unknown receiverType:%s" % self.receiverType
+            print "unknown receiverType:%s" % self.receiver_type
 
 
 class Receiver:
-    def __init__(self, receiverType, receiverProxy):
-        self.receiverType = receiverType
-        self.receiverProxy = receiverProxy
+    def __init__(self, receiver_type, receiver_proxy):
+        self.receiver_type = receiver_type
+        self.receiver_proxy = receiver_proxy
 
     def __str__(self):
-        buffer = "%s:%s" % (self.receiverType, self.receiverProxy)
+        buffer = "%s:%s" % (self.receiver_type, self.receiver_proxy)
         return buffer
 
-    def testRadio(self):
+    def invoke_radio(self, command, argz):
+        """
+        invoke the external command line utility and return response
+        """
+        return 'bogus'
+
+    def test_radio(self):
         """
         return true if radio is enabled and active
         """
         return False
 
-    def tuneRadio(self, frequency):
+    def tune_radio(self, frequency):
         """
         tune radio frequency
         """
         return frequency
 
-    def getModulation(self):
+    def get_modulation(self):
         """
         return current modulation mode
         """
         return 'XX'
 
-    def getRawSample(self):
+    def get_raw_sample(self):
         """
-        return current modulation mode
+        return current audio sample
         """
         return [123, 1234567890]
 
+    def sample_band(self, band):
+        """
+        sample an entire frequency band
+        return collection of samples
+        """
+        result_list = []
+        step_frequency = band.frequency_step / 1000.0
+        current_frequency = band.frequency_low
+        limit_frequency = band.frequency_high + step_frequency
+        while current_frequency < limit_frequency:
+            tweaked_frequency = int(round(current_frequency * 10000))
+            sample = self.get_raw_sample(tweaked_frequency)
+            current_observation = Observation(sample[0], sample[1])
+            result_list.append(current_observation)
+            current_frequency += step_frequency
+
+        return result_list
+
 
 class ReceiverStub(Receiver):
-    def __init__(self, receiverProxy):
-        Receiver.__init__(self, 'stub', receiverProxy)
+    def __init__(self, receiver_proxy):
+        Receiver.__init__(self, 'stub', receiver_proxy)
 
-    def testRadio(self):
+    def test_radio(self):
         return True
 
+    def sample_radio(self, frequency):
+        """
+        tune to frequency and sample signal strength
+        return tuple of frequency, strength and modulation
+        """
+        return [frequency, random.randrange(1, 255), 'XX']
 
 class ReceiverBc780(Receiver):
-    def __init__(self, receiverProxy):
-        Receiver.__init__(self, 'bc780', receiverProxy)
+    def __init__(self, receiver_proxy):
+        Receiver.__init__(self, 'bc780', receiver_proxy)
 
-    def invokeRadio(self, command, argz):
+    def invoke_radio(self, command, argz):
         """
         invoke the external command line utility and return response
         """
-        commandLine = "%s %s%s" % (self.receiverProxy, command, argz)
+        command_line = "%s %s%s" % (self.receiver_proxy, command, argz)
 
-        temp1 = os.popen(commandLine).readlines()
+        temp1 = os.popen(command_line).readlines()
         if len(temp1) == 0:
             return 'NONE'
 
@@ -86,11 +115,11 @@ class ReceiverBc780(Receiver):
         except ValueError:
             return 'NONE'
 
-    def testRadio(self):
+    def test_radio(self):
         """
         return true if the radio is awake and responsive
         """
-        result = self.invokeRadio('SI', '')
+        result = self.invoke_radio('SI', '')
         print "::%s::" % result
 
         try:
@@ -99,59 +128,59 @@ class ReceiverBc780(Receiver):
         except ValueError:
             return False
 
-    def tuneRadio(self, frequency):
+    def tune_radio(self, frequency):
         """
         tune scanner to specified frequency
         returns frequency as integer
         """
         argz = "%8.8d?" % (frequency)
 
-        exitFlag = False
-        errorCounter = 0
+        exit_flag = False
+        error_counter = 0
 
-        while ((exitFlag is False) and (errorCounter < 10)):
-            result = self.invokeRadio('RF', argz)
+        while ((exit_flag is False) and (error_counter < 10)):
+            result = self.invoke_radio('RF', argz)
 
             if result == 'NONE':
                 print '--------------->receiver tune parse error noted'
                 time.sleep(1)
-                errorCounter += 1
+                error_counter += 1
             else:
                 return(result[2:])
 
         print '--------------->receiver tune errors exceed retry limit'
         return 0
 
-    def getModulation(self):
+    def get_modulation(self):
         """
         return current modulation mode
         """
-        exitFlag = False
-        errorCounter = 0
+        exit_flag = False
+        error_counter = 0
 
-        while ((exitFlag is False) and (errorCounter < 10)):
-            result = self.invokeRadio('RM', '')
+        while ((exit_flag is False) and (error_counter < 10)):
+            result = self.invoke_radio('RM', '')
 
             if result == 'NONE':
                 print '--------------->receiver modulation parse error noted'
                 time.sleep(1)
-                errorCounter += 1
+                error_counter += 1
             else:
                 return(result[3:])
 
         print '--------------->receiver modulation errors exceed retry limit'
-        return('NONE')
+        return 'NONE'
 
-    def getRawSample(self):
+    def get_raw_sample(self):
         """
         return current sample (signal strength and integer frequency)
         """
-        exitFlag = False
-        errorCounter = 0
+        exit_flag = False
+        error_counter = 0
 
-        command = "%s SG" % (self.receiverProxy)
+        command = "%s SG" % (self.receiver_proxy)
 
-        while ((exitFlag is False) and (errorCounter < 10)):
+        while ((exit_flag is False) and (error_counter < 10)):
             temp1 = os.popen(command).readlines()
             temp2 = temp1[0]
 
@@ -171,45 +200,28 @@ class ReceiverBc780(Receiver):
                 print temp1
 
             time.sleep(1)
-            errorCounter += 1
+            error_counter += 1
 
         print '--------------->receiver sample errors exceed retry limit'
         return [0, 0]
 
-    def sampleRadio(self, frequency):
+    def sample_radio(self, frequency):
         """
         tune to frequency and sample signal strength
         return tuple of frequency, strength and modulation
         """
         time.sleep(1)
-        tuneStatus = self.tuneRadio(frequency)
-        if tuneStatus < 1:
+        tune_status = self.tune_radio(frequency)
+        if tune_status < 1:
             print 'tune failure'
 
         time.sleep(1)
-        modulation = self.getModulation()
+        modulation = self.get_modulation()
 
         time.sleep(1)
-        sample = self.getRawSample()
+        sample = self.get_raw_sample()
 
         return [sample[0], sample[1], modulation]
-
-    def sampleBand(self, band):
-        """
-        sample an entire frequency band
-        return collection of samples
-        """
-        resultList = []
-        stepFrequency = band.frequencyStep / 1000.0
-        currentFrequency = band.frequencyLow
-        while currentFrequency < band.frequencyHigh:
-            tweakedFrequency = int(round(currentFrequency * 10000))
-            sample = self.sampleRadio(tweakedFrequency)
-            currentObservation = observation.Observation(sample[0], sample[1], band.bandNdx)
-            resultList.append(currentObservation)
-            currentFrequency += stepFrequency
-
-        return resultList
 
 # ;;; Local Variables: ***
 # ;;; mode:python ***

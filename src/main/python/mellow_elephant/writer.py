@@ -3,7 +3,6 @@
 # Title:writer.py
 # Description:
 # Development Environment:OS X 10.9.3/Python 2.7.7
-# Legalise:Copyright (C) 2014 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import datetime
@@ -48,7 +47,7 @@ def uploadObservation(fileName):
     os.system(command)
 
     s3connection = S3Connection()
-    s3bucket = s3connection.get_bucket('mellow-digiburo-com')
+    s3bucket = s3connection.get_bucket('bogus')
 
     keyName = "%s/%s.gz" % (s3directory, s3fileName)
     targetName = "/tmp/%s.gz" % (s3fileName)

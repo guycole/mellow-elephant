@@ -2,7 +2,6 @@
 # Title:pid_lock.py
 # Description:ensure only a single instance runs
 # Development Environment:Ubuntu 10.04 LTS/Python 2.6.5
-# Legalise:Copyright (C) 2013 Digital Burro, INC.
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import os
@@ -10,20 +9,20 @@ import os
 
 class PidLock:
 
-    def lockTest(self, fileName):
+    def lock_test(self, file_name):
         """
         return True if active lock noted
         """
         try:
-            infile = open(fileName, 'r')
-            targetPid = int(infile.readline())
+            infile = open(file_name, 'r')
+            target_pid = int(infile.readline())
             infile.close()
         except IOError:
             return False
 
 #        target_pid = os.getpid()
 
-        command = "/bin/ps -p %d --no-headers" % (targetPid)
+        command = "/bin/ps -p %d --no-headers" % (target_pid)
         temp = os.popen(command).readlines()
 
         if (len(temp) > 0):
@@ -31,11 +30,11 @@ class PidLock:
 
         return False
 
-    def writeLock(self, fileName):
+    def write_lock(self, file_name):
         """
         write a PID lock file
         """
-        outfile = open(fileName, 'w')
+        outfile = open(file_name, 'w')
         outfile.write("%d\n" % (os.getpid()))
         outfile.close()
 
@@ -45,15 +44,15 @@ class PidLock:
 if __name__ == '__main__':
     print 'start'
 
-    pidLock = PidLock()
-    flag = pidLock.lockTest('/tmp/target')
+    pid_lock = PidLock()
+    flag = pid_lock.lock_test('/tmp/target')
     print flag
 
     if flag:
         print 'flag true'
     else:
         print 'flag false'
-        pidLock.writeLock('/tmp/target')
+        pid_lock.write_lock('/tmp/target')
 
     print 'stop'
 

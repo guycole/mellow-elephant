@@ -1,0 +1,22 @@
+#
+installationId: 2b7f0ac5-cf4b-4c92-8dbb-d7607e6202d7
+#
+# legal receiver types: bc780, stub
+receiverType: stub
+#
+receiverProxy: /home/gsc/git/mellow-elephant-c/linux/sampler1/stub
+#
+pidLockFile: /var/mellow/elephant/pid/stub
+#
+runDirection: low2high
+#runDirection: high2low
+#
+#runMode: once
+runMode: always
+#
+s3bucket: bogus
+#
+frequencyBands:
+    - 10
+    - 11
+#
