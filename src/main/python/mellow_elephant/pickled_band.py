@@ -5,6 +5,7 @@
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import datetime
+import json
 import time
 
 class PickledBand:
@@ -13,6 +14,7 @@ class PickledBand:
         self.band_ndx = band_ndx
         self.observations = observations
         self.create_time = int(time.time())
+        self.version = 1
 
     def get_filename(self, directory):
         time2 = datetime.datetime.utcfromtimestamp(self.create_time)
@@ -21,10 +23,16 @@ class PickledBand:
         full_name = "%s/%s" % (directory, file_name)
         return full_name
 
-    def to_dictionary(self):
-        result = {}
-        result['installation'] = self.installation
-        result['band_ndx'] = self.band_ndx
-        result['observations'] = self.observations
-        result['create_time'] = self.create_time
-        return result
+    def to_json(self):
+        observation_list = []
+        for observation in self.observations:
+            observation_list.append(json.dumps(observation.to_dictionary()))
+
+        temp = {}
+        temp['band_ndx'] = self.band_ndx
+        temp['create_time'] = self.create_time
+        temp['installation'] = self.installation
+        temp['observations'] = observation_list
+      #  temp['version'] = self.version
+
+        return json.dumps(temp)

@@ -4,6 +4,8 @@ installationId: 2b7f0ac5-cf4b-4c92-8dbb-d7607e6202d7
 # legal receiver types: bc780
 receiverType: bc780
 #
+pickleDirectory: /var/mellow/elephant/pickle
+#
 serialDevice: /dev/ttyUSB0
 #
 pidLockFile: /var/mellow/elephant/pid/usb0

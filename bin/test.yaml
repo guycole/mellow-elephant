@@ -6,7 +6,7 @@ receiverType: bc780
 #
 serialDevice: /dev/ttyUSB0
 #
-dataDirectory: /var/mellow/elephant/pickled
+pickleDirectory: /var/mellow/elephant/pickle
 #
 pidLockFile: /var/mellow/elephant/pid/usb0
 #

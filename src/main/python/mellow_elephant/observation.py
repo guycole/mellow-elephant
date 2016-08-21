@@ -6,7 +6,6 @@
 #
 import time
 
-
 class Observation:
     def __init__(self, sample=0, frequency=0):
         self.frequency = frequency
@@ -17,7 +16,7 @@ class Observation:
         buffer = "%d:%d:%d" % (self.sample, self.frequency, self.sample_time)
         return buffer
 
-    def toDictionary(self):
+    def to_dictionary(self):
         result = {}
         result['frequency'] = self.frequency
         result['sample'] = self.sample
