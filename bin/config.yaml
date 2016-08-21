@@ -6,7 +6,7 @@ receiverType: bc780
 #
 receiverProxy: /home/gsc/git/mellow-elephant-c/linux/sampler1/sampler_usb0
 #
-dataDirectory: /var/mellow/elephant/observation
+dataDirectory: /var/mellow/elephant/pickled
 #
 pidLockPath: /var/mellow/elephant/pid
 #

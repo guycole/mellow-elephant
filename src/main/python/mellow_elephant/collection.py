@@ -10,28 +10,28 @@ import sys
 import yaml
 
 from band_bc780 import BandBc780Factory
+from pickled_band import PickledBand
 from pid_lock import PidLock
 from receiver import ReceiverFactory
 
 class MellowElephant:
 
-    def upload(self, band_ndx, receiver, observations):
-        print 'yyy'
-#        for observation in observations:
-#            print observation
-
-        #pickle.dump(observations, open(currentSortie.getPickledObservationName(self.dataDirectory, band.bandNdx), "wb"))
-
-        # write sortie to signal completion
-        #pickle.dump(currentSortie, open(currentSortie.getPickledSortieName(self.dataDirectory), "wb"))
-
     def band_work(self, band_ndx, receiver):
         band_factory = BandBc780Factory()
         frequency_band = band_factory.factory(band_ndx)
         observations = receiver.sample_band(frequency_band)
-        self.upload(band_ndx, receiver, observations)
-        print frequency_band
 
+        pickled_band = PickledBand(installation, band_ndx, observations)
+        pickle.dump(pickled_band, open(pickled_band.get_filename(data_directory), "wb"))
+
+    def runner(self, receiver):
+        if run_direction == 'low2high':
+            for band in frequency_bands:
+                self.band_work(band, receiver)
+        else:
+            for band in reversed(frequency_bands):
+                self.band_work(band, receiver)
+	
     def execute(self):
         pid_lock = PidLock()
         if pid_lock.lock_test(pid_lock_file):
@@ -41,14 +41,13 @@ class MellowElephant:
             pid_lock.write_lock(pid_lock_file)
 
             receiver_factory = ReceiverFactory()
-            current_receiver = receiver_factory.factory(receiver_type, receiver_proxy)
+            current_receiver = receiver_factory.factory(receiver_type, serial_device)
 
-            if run_direction == 'low2high':
-                for band in frequency_bands:
-                    self.band_work(band, current_receiver)
+	    if run_mode == 'always':
+                while True:
+                    self.runner(current_receiver)    
             else:
-                for band in reversed(frequency_bands):
-                    self.band_work(band, current_receiver)
+                self.runner(current_receiver)    
 
 print 'start'
 
@@ -63,17 +62,20 @@ if __name__ == '__main__':
 
     configuration = yaml.load(file(fileName))
 
+    data_directory = configuration['dataDirectory']
+
     frequency_bands = configuration['frequencyBands']
 
+    installation = configuration['installationId']
+
     receiver_type = configuration['receiverType']
-    receiver_proxy = configuration['receiverProxy']
+
+    serial_device = configuration['serialDevice']
 
     pid_lock_file = configuration['pidLockFile']
 
     run_direction = configuration['runDirection']
     run_mode = configuration['runMode']
-
-    s3bucket = configuration['s3bucket']
 
     driver = MellowElephant()
     driver.execute()

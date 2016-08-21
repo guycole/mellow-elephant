@@ -1,17 +1,22 @@
 #
-installationId: 51906849-d546-4358-ac5c-66936323e7e9
+installationId: 2b7f0ac5-cf4b-4c92-8dbb-d7607e6202d7
 #
 # legal receiver types: bc780
 receiverType: bc780
 #
-receiverProxy: /home/gsc/git/mellow-elephant-c/linux/sampler1/sampler_usb0
+serialDevice: /dev/ttyUSB0
 #
-dataDirectory: /var/mellow/elephant/observation
+dataDirectory: /var/mellow/elephant/pickled
 #
-pidLockPath: /var/mellow/elephant/pid
+pidLockFile: /var/mellow/elephant/pid/usb0
 #
-runMode: once
+runDirection: low2high
+#runDirection: high2low
+#
+#runMode: once
+runMode: always
 #
 frequencyBands:
     - 10
+    - 11
 #
