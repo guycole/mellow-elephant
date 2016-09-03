@@ -19,7 +19,6 @@ from boto.s3.key import Key
 print 'start'
 
 def uploadObservation(fileName):
-    print 'xxx'
     print fileName
 
     observationRows = pickle.load(open(fileName, "rb"))

@@ -63,7 +63,7 @@ class Processing:
         s3key = Key(s3bucket)
         s3key.key = "%s/%s" % (s3directory, file_name)
         s3key.set_contents_from_filename(full_name)
-j
+
     def process_band(self, full_name, pickled_band):
         print pickled_band.band_ndx
         self.process_graph(pickled_band)
