@@ -1,4 +1,4 @@
-mellow-elephant-py
+mellow-elephant
 ==================
 
 Mellow Elephant Client (Python)

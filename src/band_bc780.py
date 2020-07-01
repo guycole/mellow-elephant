@@ -1,7 +1,7 @@
 #
 # Title:band_bc780.py
 # Description:BC-780 frequency band
-# Development Environment:OS X 10.9.3/Python 2.7.7
+# Development Environment:OS X 10.15.5/Python 3.7.6
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 class BandBc780:
@@ -129,4 +129,4 @@ class BandBc780Factory:
         elif band_ndx == 50:
             return BandBc780(band_ndx, 1240.0000, 1300.0000, 12.5, 'NFM')
         else:
-            print "unsupported band_ndx:%d" % band_ndx
+            print("unsupported band_ndx:%d" % band_ndx)

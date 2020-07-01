@@ -1,12 +1,12 @@
 #
 # Title:receiver.py
 # Description:radio receiver classes
-# Development Environment:OS X 10.9.3/Python 2.7.7
+# Development Environment:OS X 10.15.5/Python 3.7.6
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import os
 import random
-import serial
+#import serial
 import time
 
 from observation import Observation
@@ -18,7 +18,7 @@ class ReceiverFactory:
         elif receiver_type == 'stub':
             return ReceiverStub(serial_device)
         else:
-            print "unknown receiverType:%s" % self.receiver_type
+            print("unknown receiverType:%s" % self.receiver_type)
 
 
 class Receiver:
@@ -95,7 +95,7 @@ class ReceiverStub(Receiver):
 class ReceiverBc780(Receiver):
     def __init__(self, serial_device):
         Receiver.__init__(self, 'bc780', serial_device)
-        self.port = serial.Serial(serial_device, baudrate=9600, timeout=1.0)
+#        self.port = serial.Serial(serial_device, baudrate=9600, timeout=1.0)
 
     def invoke_radio(self, command, argz):
         """
@@ -120,7 +120,7 @@ class ReceiverBc780(Receiver):
         return true if the radio is awake and responsive
         """
         result = self.invoke_radio('SI', '')
-        print "::%s::" % result
+        print("::%s::" % result)
 
         try:
             ndx1 = result.index('BC780XLT')

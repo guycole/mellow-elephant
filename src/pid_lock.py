@@ -1,7 +1,7 @@
 #
 # Title:pid_lock.py
 # Description:ensure only a single instance runs
-# Development Environment:Ubuntu 10.04 LTS/Python 2.6.5
+# Development Environment:OS X 10.15.5/Python 3.7.6
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import os
@@ -9,10 +9,12 @@ import os
 
 class PidLock:
 
-    def lock_test(self, file_name):
+    def lock_test(self, file_name:str) -> bool:
         """
         return True if active lock noted
         """
+        target_pid = os.getpid()
+
         try:
             infile = open(file_name, 'r')
             target_pid = int(infile.readline())
@@ -20,17 +22,17 @@ class PidLock:
         except IOError:
             return False
 
-#        target_pid = os.getpid()
-
-        command = "/bin/ps -p %d --no-headers" % (target_pid)
+        command = "/bin/ps -p %d" % target_pid
         temp = os.popen(command).readlines()
+        # returns one or two lines, w/first line as header
+        #['  PID TTY           TIME CMD\n', '52645 ttys000    0:00.04 python pid_lock.py\n']
 
-        if (len(temp) > 0):
+        if len(temp) > 1:
             return True
 
         return False
 
-    def write_lock(self, file_name):
+    def write_lock(self, file_name:str) -> bool:
         """
         write a PID lock file
         """
@@ -38,23 +40,23 @@ class PidLock:
         outfile.write("%d\n" % (os.getpid()))
         outfile.close()
 
-#
-#
-#
 if __name__ == '__main__':
-    print 'start'
+    print('start')
 
     pid_lock = PidLock()
+
     flag = pid_lock.lock_test('/tmp/target')
-    print flag
 
     if flag:
-        print 'flag true'
+        print('pidlock test true')
     else:
-        print 'flag false'
+        print('pidlock test false, now write lock')
         pid_lock.write_lock('/tmp/target')
 
-    print 'stop'
+    flag = pid_lock.lock_test('/tmp/target')
+    print("pidlock test now %s" % flag)
+
+    print('stop')
 
 # ;;; Local Variables: ***
 # ;;; mode:python ***
