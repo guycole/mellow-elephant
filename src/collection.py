@@ -8,37 +8,45 @@ import pickle
 import sys
 import yaml
 
-from band_bc780 import BandBc780Factory
 from pickled_band import PickledBand
 from pid_lock import PidLock
 from receiver import ReceiverFactory
 
 class Collection:
 
-    def band_work(self, band_ndx, receiver):
-        band_factory = BandBc780Factory()
-#        frequency_band = band_factory.factory(band_ndx)
-#        observations = receiver.sample_band(frequency_band)
+    def band_work(self, band_ndx:int, receiver:object) -> list:
+        """
+        Sample a frequency band
+        :param band_ndx: index into receiver specific band table
+        :param receiver: object
+        :return: observations list
+        """
+        print("now walking band %d %s" % (band_ndx, receiver))
 
-#        pickled_band = PickledBand(installation, band_ndx, observations)
-#        pickle.dump(pickled_band, open(pickled_band.get_filename(pickle_directory), "wb"))
+        return receiver.sample_band(band_ndx)
 
-    def runner(self, frequency_bands:list, receiver:object, run_direction:str):
-        if run_direction == 'low2high':
-            for band in frequency_bands:
-                self.band_work(band, receiver)
-        else:
-            for band in reversed(frequency_bands):
-                self.band_work(band, receiver)
+    def runner(self, frequency_bands:list, receiver:object, installation:str, pickle_directory:str):
+        """
+        Drive a collection pass (sample all specified frequency bands)
+        :param frequency_bands: list of indices into receiver specific catalog
+        :param receiver: object
+        :param installation: unique installation identifier
+        :param pickle_directory: directory to contain serialized observations
+        :return:
+        """
+        for band_ndx in frequency_bands:
+            observations = self.band_work(band_ndx, receiver)
+
+            pickled_band = PickledBand(installation, band_ndx, observations)
+            pickle.dump(pickled_band, open(pickled_band.get_filename(pickle_directory), "wb"))
 
     def execute(self, configuration:dict):
-#        pickle_directory = configuration['pickleDirectory']
+        pickle_directory = configuration['pickleDirectory']
         frequency_bands = configuration['frequencyBands']
         installation = configuration['installationId']
         receiver_type = configuration['receiverType']
         serial_device = configuration['serialDevice']
         pid_lock_file = configuration['pidLockFile']
-        run_direction = configuration['runDirection']
         run_mode = configuration['runMode']
 
         pid_lock = PidLock()
@@ -51,11 +59,11 @@ class Collection:
             receiver_factory = ReceiverFactory()
             current_receiver = receiver_factory.factory(receiver_type, serial_device)
 
-            if run_mode == 'always':
-                while True:
-                    self.runner(frequency_bands, current_receiver, run_direction)
-            else:
-                self.runner(frequency_bands, current_receiver, run_direction)
+            run_flag = True
+            while run_flag:
+                self.runner(frequency_bands, current_receiver, installation, pickle_directory)
+                if run_mode == 'once':
+                    run_flag = False
 
 print('start')
 

@@ -9,6 +9,8 @@ import random
 #import serial
 import time
 
+from band_bc780 import BandBc780Factory
+
 from observation import Observation
 
 class ReceiverFactory:
@@ -25,6 +27,9 @@ class Receiver:
     def __init__(self, receiver_type, serial_device):
         self.receiver_type = receiver_type
         self.serial_device = serial_device
+
+        # stub and bc780 are same
+        self.band_factory = BandBc780Factory()
 
     def __str__(self):
         buffer = "%s:%s" % (self.receiver_type, self.serial_device)
@@ -60,23 +65,6 @@ class Receiver:
         """
         return [123, 1234567890]
 
-    def sample_band(self, band):
-        """
-        sample an entire frequency band
-        return collection of observations
-        """
-        result_list = []
-        step_frequency = band.frequency_step / 1000.0
-        current_frequency = band.frequency_low
-        limit_frequency = band.frequency_high + step_frequency
-        while current_frequency < limit_frequency:
-            tweaked_frequency = int(round(current_frequency * 10000))
-            sample = self.sample_radio(tweaked_frequency)
-            current_observation = Observation(sample[0], sample[1])
-            result_list.append(current_observation)
-            current_frequency += step_frequency
-
-        return result_list
 
 class ReceiverStub(Receiver):
     def __init__(self, receiver_proxy):
@@ -91,6 +79,27 @@ class ReceiverStub(Receiver):
         return tuple of frequency, strength and modulation
         """
         return [frequency, random.randrange(1, 255), 'XX']
+
+
+    def sample_band(self, band_ndx):
+        """
+        sample an entire frequency band
+        return collection of observations
+        """
+        frequency_band = self.band_factory.factory(band_ndx)
+
+        result_list = []
+        step_frequency = frequency_band.frequency_step / 1000.0
+        current_frequency = frequency_band.frequency_low
+        limit_frequency = frequency_band.frequency_high + step_frequency
+        while current_frequency < limit_frequency:
+            tweaked_frequency = int(round(current_frequency * 10000))
+            sample = self.sample_radio(tweaked_frequency)
+            current_observation = Observation(sample[0], sample[1])
+            result_list.append(current_observation)
+            current_frequency += step_frequency
+
+        return result_list
 
 class ReceiverBc780(Receiver):
     def __init__(self, serial_device):
@@ -172,6 +181,26 @@ class ReceiverBc780(Receiver):
         sample = self.get_raw_sample()
 
         return [sample[0], sample[1], modulation]
+
+    def sample_band(self, band_ndx):
+        """
+        sample an entire frequency band
+        return collection of observations
+        """
+        frequency_band = self.band_factory.factory(band_ndx)
+
+        result_list = []
+        step_frequency = frequency_band.frequency_step / 1000.0
+        current_frequency = frequency_band.frequency_low
+        limit_frequency = frequency_band.frequency_high + step_frequency
+        while current_frequency < limit_frequency:
+            tweaked_frequency = int(round(current_frequency * 10000))
+            sample = self.sample_radio(tweaked_frequency)
+            current_observation = Observation(sample[0], sample[1])
+            result_list.append(current_observation)
+            current_frequency += step_frequency
+
+        return result_list
 
 # ;;; Local Variables: ***
 # ;;; mode:python ***

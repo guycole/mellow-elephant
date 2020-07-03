@@ -2,11 +2,12 @@
 installationId: 67ec00b2-2c50-49f6-834f-c565fd8f98dd
 #
 # legal receiver types: bc780, stub
-receiverType: bc780
+#receiverType: bc780
+receiverType: stub
 #
 receiverProxy: /home/gsc/git/mellow-elephant-c/linux/sampler1/sampler_usb0
 #
-dataDirectory: /var/mellow/elephant/pickled
+pickleDirectory: /tmp
 #
 pidLockFile: /tmp/lock.pid
 #
