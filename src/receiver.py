@@ -4,6 +4,7 @@
 # Development Environment:OS X 10.15.5/Python 3.7.6
 # Author:G.S. Cole (guycole at gmail dot com)
 #
+import logging
 import os
 import random
 #import serial
@@ -14,17 +15,31 @@ from band_bc780 import BandBc780Factory
 from observation import Observation
 
 class ReceiverFactory:
+    def __init__(self):
+        self.logger = logging.getLogger()
+        self.logger.setLevel(logging.INFO)
+
     def factory(self, receiver_type, serial_device):
+        print("receiver factory:%s" % receiver_type)
+        self.logger.info("receiver factory:%s" % receiver_type)
+
         if receiver_type == 'bc780':
-            return ReceiverBc780(serial_device)
+            pass
+#            return ReceiverBc780(serial_device)
+        elif receiver_type == 'rtlsdr':
+            pass
+#            return ReceiverRtlSdr(serial_device)
         elif receiver_type == 'stub':
-            return ReceiverStub(serial_device)
+            pass
+#            return ReceiverStub(serial_device)
         else:
             print("unknown receiverType:%s" % self.receiver_type)
 
-
 class Receiver:
     def __init__(self, receiver_type, serial_device):
+        self.logger = logging.getLogger()
+        self.logger.setLevel(logging.INFO)
+
         self.receiver_type = receiver_type
         self.serial_device = serial_device
 

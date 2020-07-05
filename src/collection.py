@@ -4,6 +4,7 @@
 # Development Environment:OS X 10.15.5/Python 3.7.6
 # Author:G.S. Cole (guycole at gmail dot com)
 #
+import logging
 import pickle
 import sys
 import yaml
@@ -13,6 +14,9 @@ from pid_lock import PidLock
 from receiver import ReceiverFactory
 
 class Collection:
+    def __init__(self):
+        self.logger = logging.getLogger()
+        self.logger.setLevel(logging.INFO)
 
     def band_work(self, band_ndx:int, receiver:object) -> list:
         """
@@ -51,19 +55,19 @@ class Collection:
 
         pid_lock = PidLock()
         if pid_lock.lock_test(pid_lock_file):
-            print('active pid lock noted')
+            self.logger.info('active pid lock noted')
         else:
-            print('write fresh pid lock')
+            self.logger.info('write fresh pid lock')
             pid_lock.write_lock(pid_lock_file)
 
             receiver_factory = ReceiverFactory()
             current_receiver = receiver_factory.factory(receiver_type, serial_device)
 
-            run_flag = True
-            while run_flag:
-                self.runner(frequency_bands, current_receiver, installation, pickle_directory)
-                if run_mode == 'once':
-                    run_flag = False
+#            run_flag = True
+#            while run_flag:
+#                self.runner(frequency_bands, current_receiver, installation, pickle_directory)
+#                if run_mode == 'once':
+#                    run_flag = False
 
 print('start')
 
