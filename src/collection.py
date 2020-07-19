@@ -53,6 +53,8 @@ class Collection:
         pid_lock_file = configuration['pidLockFile']
         run_mode = configuration['runMode']
 
+        logger_level = logging.INFO
+
         pid_lock = PidLock()
         if pid_lock.lock_test(pid_lock_file):
             self.logger.info('active pid lock noted')

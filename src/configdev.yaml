@@ -1,10 +1,10 @@
 #
-installationId: 67ec00b2-2c50-49f6-834f-c565fd8f98dd
+installationId: 820d1021-75d6-4c83-8487-edbe4b433858
 #
 # legal receiver types: bc780, rtlsdr, stub
 #receiverType: bc780
 #receiverType: rtlsdr
-receiverType: stub
+receiverType: bc780
 #
 pickleDirectory: /tmp
 #
