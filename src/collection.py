@@ -14,9 +14,15 @@ from pid_lock import PidLock
 from receiver import ReceiverFactory
 
 class Collection:
-    def __init__(self):
+    def __init__(self, logger_level:int):
+        logging.basicConfig(format='%(asctime)s %(message)s', level=logger_level)
+
         self.logger = logging.getLogger()
-        self.logger.setLevel(logging.INFO)
+        self.logger.debug('debug level message')
+        self.logger.info('info level message')
+        self.logger.warning('warning level message')
+        self.logger.error('error level message')
+        self.logger.critical('critical level message')
 
     def band_work(self, band_ndx:int, receiver:object) -> list:
         """
@@ -25,7 +31,7 @@ class Collection:
         :param receiver: object
         :return: observations list
         """
-        print("now walking band %d %s" % (band_ndx, receiver))
+        self.logger.info(f"now walking band {band_ndx} {receiver}")
 
         return receiver.sample_band(band_ndx)
 
@@ -53,8 +59,6 @@ class Collection:
         pid_lock_file = configuration['pidLockFile']
         run_mode = configuration['runMode']
 
-        logger_level = logging.INFO
-
         pid_lock = PidLock()
         if pid_lock.lock_test(pid_lock_file):
             self.logger.info('active pid lock noted')
@@ -65,11 +69,11 @@ class Collection:
             receiver_factory = ReceiverFactory()
             current_receiver = receiver_factory.factory(receiver_type, serial_device)
 
-#            run_flag = True
-#            while run_flag:
-#                self.runner(frequency_bands, current_receiver, installation, pickle_directory)
-#                if run_mode == 'once':
-#                    run_flag = False
+            run_flag = True
+            while run_flag:
+                self.runner(frequency_bands, current_receiver, installation, pickle_directory)
+                if run_mode == 'once':
+                    run_flag = False
 
 print('start')
 
@@ -84,7 +88,8 @@ if __name__ == '__main__':
 
     with open(file_name, "r") as infile:
         try:
-            collection = Collection()
+#            collection = Collection(logging.INFO)
+            collection = Collection(logging.DEBUG)
             collection.execute(yaml.load(infile, Loader=yaml.FullLoader))
         except yaml.YAMLError as exception:
             print(exception)

@@ -1,8 +1,8 @@
 #! /usr/bin/python
 #
 # Title:writer.py
-# Description:
-# Development Environment:OS X 10.9.3/Python 2.7.7
+# Description: write mellow elephant observations to remote server
+# Development Environment:OS X 10.15.5/Python 3.7.6
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import datetime
