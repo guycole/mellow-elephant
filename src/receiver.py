@@ -7,7 +7,7 @@
 import logging
 import os
 import random
-#import serial
+import serial
 import time
 
 from band_bc780 import BandBc780Factory
@@ -78,14 +78,16 @@ class Receiver:
 class ReceiverBc780(Receiver):
     def __init__(self, serial_device):
         Receiver.__init__(self, 'bc780', serial_device)
-#        self.port = serial.Serial(serial_device, baudrate=9600, timeout=1.0)
+        self.port = serial.Serial(serial_device, baudrate=9800, timeout=1.0)
 
-    def invoke_radio(self, command, argz):
+    def invoke_radio(self, command:str, argz:str) -> str:
         """
         send command to radio and wait for response
         """
-        tx_buffer = "\r\n%s%s\r\n" % (command, argz)
-        self.port.write(tx_buffer)
+        tx_buffer = "%s%s\r" % (command, argz)
+#        print(f"tx_buffer {tx_buffer}")
+        
+        self.port.write(tx_buffer.encode())
 
         rx_buffer = ''
         
@@ -94,67 +96,83 @@ class ReceiverBc780(Receiver):
             if len(raw_buffer) < 1:
                 break
             else:
-                rx_buffer += raw_buffer
+                rx_buffer += str(raw_buffer)
+
+#        print(rx_buffer)
 
         return rx_buffer.strip()
 
-    def test_radio(self):
+    def test_radio(self) -> bool:
         """
         return true if the radio is awake and responsive
         """
+        # 
+        self.logger.debug('test_radio')
+        
         result = self.invoke_radio('SI', '')
-        print("::%s::" % result)
 
-        try:
-            ndx1 = result.index('BC780XLT')
-            return True
-        except ValueError:
+        ndx1 = result.find('BC780XLT')
+        if ndx1 < 0:
             return False
+        else:
+            return True
 
-    def tune_radio(self, frequency):
+    def tune_radio(self, frequency:int) -> str:
         """
         tune scanner to specified frequency
         returns frequency as integer
         """
-        argz = "%8.8d?" % frequency
+        self.logger.debug('tune_radio')
+
+        argz = "%8.8d" % frequency
         result = self.invoke_radio('RF', argz)
-        return result[2:]
+        return result
 
     def get_modulation(self):
         """
         return current modulation mode
         """
+        self.logger.debug('get_modulation')
+        
         result = self.invoke_radio('RM', '')
-        ndx1 = result.rindex(' ')
-        return result[ndx1+1:]
+        
+        ndx1 = result.find(' ')
+        ndx2 = len(result)
+        
+        return result[ndx1+1:ndx2-3]
 
     def get_raw_sample(self):
         """
         return current sample (signal strength and integer frequency)
         """
+        self.logger.debug('get_raw_sample')
+        
         result = self.invoke_radio('SG', '')
 
-        ndx1 = result.rindex('S')
-        ndx2 = result.index(' ', ndx1)
-        strength = result[ndx1+1:ndx2]
+        ndx1 = result.find(' ')
+        ndx2 = len(result)
+        
+        strength = result[3:ndx1]
+        frequency = result[ndx1+2:ndx2-3]
+        return(int(strength), int(frequency))
 
-        ndx1 = result.rindex('F')
-        frequency = result[ndx1+1:]
-
-        return [int(strength), long(frequency)]
-
-    def sample_radio(self, frequency):
+    def sample_radio(self, frequency:int):
         """
         tune to frequency and sample signal strength
         return tuple of frequency, strength and modulation
         """
-        self.tune_radio(frequency)
+        retstat = self.tune_radio(frequency)
+        if retstat.find('OK') > 0:
+            self.logger.debug(f"radio tune OK {frequency}")
+        else:
+            self.logger.debug(f"radio tune failure {frequency}")
+            return None
 
         modulation = self.get_modulation()
 
         sample = self.get_raw_sample()
 
-        return [sample[0], sample[1], modulation]
+        return(sample[0], sample[1], modulation, int(time.time()))
 
     def sample_band(self, band_ndx):
         """
@@ -163,16 +181,24 @@ class ReceiverBc780(Receiver):
         """
         frequency_band = self.band_factory.factory(band_ndx)
 
+        counter = 0
+
         result_list = []
-#        step_frequency = frequency_band.frequency_step / 1000.0
-#        current_frequency = frequency_band.frequency_low
-#        limit_frequency = frequency_band.frequency_high + step_frequency
-#        while current_frequency < limit_frequency:
-#            tweaked_frequency = int(round(current_frequency * 10000))
-#            sample = self.sample_radio(tweaked_frequency)
-#            current_observation = Observation(sample[0], sample[1])
-#            result_list.append(current_observation)
-#            current_frequency += step_frequency
+        step_frequency = frequency_band.frequency_step / 1000.0
+        current_frequency = frequency_band.frequency_low
+        limit_frequency = frequency_band.frequency_high + step_frequency
+        while current_frequency < limit_frequency:
+            tweaked_frequency = int(round(current_frequency * 10000))
+            sample = self.sample_radio(tweaked_frequency)
+            if sample is not None:
+                print(sample)
+                result_list.append(sample)
+
+                counter += 1
+                if counter > 5:
+                    return result_list
+
+            current_frequency += step_frequency
 
         return result_list
 

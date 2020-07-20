@@ -6,10 +6,13 @@
 #
 import datetime
 import json
+import logging
 import time
 
 class PickledBand:
     def __init__(self, installation, band_ndx, observations):
+        self.logger = logging.getLogger()
+        
         self.installation = installation
         self.band_ndx = band_ndx
         self.observations = observations
@@ -17,22 +20,22 @@ class PickledBand:
         self.version = 1
 
     def get_filename(self, directory):
-        time2 = datetime.datetime.utcfromtimestamp(self.create_time)
-        time3 = time2.timetuple()
-        file_name = "%4.4d_%2.2d_%2.2d_%2.2d_%2.2d_%2.2d" % (time3[0], time3[1], time3[2], time3[3], time3[4], self.band_ndx)
-        full_name = "%s/%s" % (directory, file_name)
-        return full_name
+        file_name = f"{directory}/{self.create_time}-{self.band_ndx}.json"
+        self.logger.info(f"fresh pickle file:{file_name}")
+        return file_name
 
     def to_json(self):
         observation_list = []
         for observation in self.observations:
-            observation_list.append(json.dumps(observation.to_dictionary()))
+            element = {"strength": observation[0], "frequency": observation[1], "modulation": observation[2], "timestamp": observation[3]}
+            observation_list.append(element)
+
 
         temp = {}
         temp['band_ndx'] = self.band_ndx
         temp['create_time'] = self.create_time
         temp['installation'] = self.installation
+        temp['version'] = self.version
         temp['observations'] = observation_list
-      #  temp['version'] = self.version
 
         return json.dumps(temp)

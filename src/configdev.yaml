@@ -10,13 +10,14 @@ pickleDirectory: /tmp
 #
 pidLockFile: /tmp/lock.pid
 #
-serialDevice: bogus
+serialDevice: /dev/ttyUSB0
 #
 runMode: once
 #runMode: always
 runDirection: low2high
 #
 frequencyBands:
-    - 13
+    - 10
+    - 11
     - 14
 #

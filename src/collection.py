@@ -24,7 +24,7 @@ class Collection:
         self.logger.error('error level message')
         self.logger.critical('critical level message')
 
-    def band_work(self, band_ndx:int, receiver:object) -> list:
+    def sample_band(self, band_ndx:int, receiver:object) -> list:
         """
         Sample a frequency band
         :param band_ndx: index into receiver specific band table
@@ -45,10 +45,12 @@ class Collection:
         :return:
         """
         for band_ndx in frequency_bands:
-            observations = self.band_work(band_ndx, receiver)
+            observations = self.sample_band(band_ndx, receiver)
 
             pickled_band = PickledBand(installation, band_ndx, observations)
-            pickle.dump(pickled_band, open(pickled_band.get_filename(pickle_directory), "wb"))
+
+            with open(pickled_band.get_filename(pickle_directory), 'w') as writer:
+                writer.write(pickled_band.to_json())
 
     def execute(self, configuration:dict):
         pickle_directory = configuration['pickleDirectory']
@@ -68,6 +70,12 @@ class Collection:
 
             receiver_factory = ReceiverFactory()
             current_receiver = receiver_factory.factory(receiver_type, serial_device)
+
+            if current_receiver.test_radio() is True:
+                self.logger.info('receiver noted')
+            else:
+                self.logger.error('unable to connect to radio')
+                return
 
             run_flag = True
             while run_flag:
