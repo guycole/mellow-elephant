@@ -5,14 +5,11 @@
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import logging
-import os
-import random
 import serial
 import time
 
 from band_bc780 import BandBc780Factory
 
-from observation import Observation
 
 class ReceiverFactory:
     def __init__(self):
@@ -21,16 +18,17 @@ class ReceiverFactory:
     def factory(self, receiver_type, serial_device):
         self.logger.info("receiver factory:%s" % receiver_type)
 
-        if receiver_type == 'bc780':
+        if receiver_type == "bc780":
             return ReceiverBc780(serial_device)
-#        elif receiver_type == 'rtlsdr':
-#            pass
-#            return ReceiverRtlSdr(serial_device)
-#        elif receiver_type == 'stub':
-#            pass
-#            return ReceiverStub(serial_device)
+        #        elif receiver_type == 'rtlsdr':
+        #            pass
+        #            return ReceiverRtlSdr(serial_device)
+        #        elif receiver_type == 'stub':
+        #            pass
+        #            return ReceiverStub(serial_device)
         else:
             print("unknown receiverType:%s" % self.receiver_type)
+
 
 class Receiver:
     def __init__(self, receiver_type, serial_device):
@@ -49,7 +47,7 @@ class Receiver:
         """
         invoke the external command line utility and return response
         """
-        return 'bogus'
+        return "bogus"
 
     def test_radio(self):
         """
@@ -67,7 +65,7 @@ class Receiver:
         """
         return current modulation mode
         """
-        return 'XX'
+        return "XX"
 
     def get_raw_sample(self):
         """
@@ -75,22 +73,23 @@ class Receiver:
         """
         return [123, 1234567890]
 
+
 class ReceiverBc780(Receiver):
     def __init__(self, serial_device):
-        Receiver.__init__(self, 'bc780', serial_device)
+        Receiver.__init__(self, "bc780", serial_device)
         self.port = serial.Serial(serial_device, baudrate=9800, timeout=1.0)
 
-    def invoke_radio(self, command:str, argz:str) -> str:
+    def invoke_radio(self, command: str, argz: str) -> str:
         """
         send command to radio and wait for response
         """
         tx_buffer = "%s%s\r" % (command, argz)
-#        print(f"tx_buffer {tx_buffer}")
-        
+        #        print(f"tx_buffer {tx_buffer}")
+
         self.port.write(tx_buffer.encode())
 
-        rx_buffer = ''
-        
+        rx_buffer = ""
+
         while True:
             raw_buffer = self.port.read(15)
             if len(raw_buffer) < 1:
@@ -98,7 +97,7 @@ class ReceiverBc780(Receiver):
             else:
                 rx_buffer += str(raw_buffer)
 
-#        print(rx_buffer)
+        #        print(rx_buffer)
 
         return rx_buffer.strip()
 
@@ -106,63 +105,63 @@ class ReceiverBc780(Receiver):
         """
         return true if the radio is awake and responsive
         """
-        # 
-        self.logger.debug('test_radio')
-        
-        result = self.invoke_radio('SI', '')
+        #
+        self.logger.debug("test_radio")
 
-        ndx1 = result.find('BC780XLT')
+        result = self.invoke_radio("SI", "")
+
+        ndx1 = result.find("BC780XLT")
         if ndx1 < 0:
             return False
         else:
             return True
 
-    def tune_radio(self, frequency:int) -> str:
+    def tune_radio(self, frequency: int) -> str:
         """
         tune scanner to specified frequency
         returns frequency as integer
         """
-        self.logger.debug('tune_radio')
+        self.logger.debug("tune_radio")
 
         argz = "%8.8d" % frequency
-        result = self.invoke_radio('RF', argz)
+        result = self.invoke_radio("RF", argz)
         return result
 
     def get_modulation(self):
         """
         return current modulation mode
         """
-        self.logger.debug('get_modulation')
-        
-        result = self.invoke_radio('RM', '')
-        
-        ndx1 = result.find(' ')
+        self.logger.debug("get_modulation")
+
+        result = self.invoke_radio("RM", "")
+
+        ndx1 = result.find(" ")
         ndx2 = len(result)
-        
-        return result[ndx1+1:ndx2-3]
+
+        return result[ndx1 + 1 : ndx2 - 3]
 
     def get_raw_sample(self):
         """
         return current sample (signal strength and integer frequency)
         """
-        self.logger.debug('get_raw_sample')
-        
-        result = self.invoke_radio('SG', '')
+        self.logger.debug("get_raw_sample")
 
-        ndx1 = result.find(' ')
+        result = self.invoke_radio("SG", "")
+
+        ndx1 = result.find(" ")
         ndx2 = len(result)
-        
-        strength = result[3:ndx1]
-        frequency = result[ndx1+2:ndx2-3]
-        return(int(strength), int(frequency))
 
-    def sample_radio(self, frequency:int):
+        strength = result[3:ndx1]
+        frequency = result[ndx1 + 2 : ndx2 - 3]
+        return (int(strength), int(frequency))
+
+    def sample_radio(self, frequency: int):
         """
         tune to frequency and sample signal strength
         return tuple of frequency, strength and modulation
         """
         retstat = self.tune_radio(frequency)
-        if retstat.find('OK') > 0:
+        if retstat.find("OK") > 0:
             self.logger.debug(f"radio tune OK {frequency}")
         else:
             self.logger.debug(f"radio tune failure {frequency}")
@@ -172,7 +171,7 @@ class ReceiverBc780(Receiver):
 
         sample = self.get_raw_sample()
 
-        return(sample[0], sample[1], modulation, int(time.time()))
+        return (sample[0], sample[1], modulation, int(time.time()))
 
     def sample_band(self, band_ndx):
         """
@@ -201,6 +200,7 @@ class ReceiverBc780(Receiver):
             current_frequency += step_frequency
 
         return result_list
+
 
 # ;;; Local Variables: ***
 # ;;; mode:python ***
