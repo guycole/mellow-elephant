@@ -5,7 +5,6 @@
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import logging
-import pickle
 import sys
 import yaml
 
