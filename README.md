@@ -67,76 +67,39 @@ uniden bands
 | 12    | 12     | 137.0000 | 143.9950 | 5.0     | FM         |
 | 13    | 13     | 144.0000 | 147.9950 | 5.0     | FM         |
 | 14    | 14     | 148.0000 | 161.9950 | 5.0     | FM         |
-| 15    | 15     | 162.0000 | 173.9875 | 12.5    | FM         |
-
-
-        elif band_ndx == 16:
-            return BandBc780(band_ndx, 174.0000, 215.9500, 50.0, "WFM")
-        elif band_ndx == 17:
-            return BandBc780(band_ndx, 216.0000, 224.9950, 5.0, "FM")
-        elif band_ndx == 18:
-            return BandBc780(band_ndx, 225.0000, 399.9500, 50.0, "AM")
-        elif band_ndx == 19:
-            return BandBc780(band_ndx, 400.0000, 405.9875, 12.5, "NFM")
-        elif band_ndx == 20:
-            return BandBc780(band_ndx, 406.0000, 419.9875, 12.5, "NFM")
-        elif band_ndx == 21:
-            return BandBc780(band_ndx, 420.0000, 424.9875, 12.5, "NFM")
-        elif band_ndx == 22:
-            return BandBc780(band_ndx, 425.0000, 429.9875, 12.5, "NFM")
-        elif band_ndx == 23:
-            return BandBc780(band_ndx, 430.0000, 449.9875, 12.5, "NFM")
-        elif band_ndx == 24:
-            return BandBc780(band_ndx, 450.0000, 454.9875, 12.5, "NFM")
-        elif band_ndx == 25:
-            return BandBc780(band_ndx, 455.0000, 459.9875, 12.5, "NFM")
-        elif band_ndx == 26:
-            return BandBc780(band_ndx, 460.0000, 464.9875, 12.5, "NFM")
-        elif band_ndx == 27:
-            return BandBc780(band_ndx, 465.0000, 469.9875, 12.5, "NFM")
-        elif band_ndx == 28:
-            return BandBc780(band_ndx, 470.0000, 472.9875, 12.5, "NFM")
-        elif band_ndx == 29:
-            return BandBc780(band_ndx, 473.0000, 475.9875, 12.5, "NFM")
-        elif band_ndx == 30:
-            return BandBc780(band_ndx, 476.0000, 478.9875, 12.5, "NFM")
-        elif band_ndx == 31:
-            return BandBc780(band_ndx, 479.0000, 481.9875, 12.5, "NFM")
-        elif band_ndx == 32:
-            return BandBc780(band_ndx, 482.0000, 484.9875, 12.5, "NFM")
-        elif band_ndx == 33:
-            return BandBc780(band_ndx, 485.0000, 487.9875, 12.5, "NFM")
-        elif band_ndx == 34:
-            return BandBc780(band_ndx, 488.0000, 490.9875, 12.5, "NFM")
-        elif band_ndx == 35:
-            return BandBc780(band_ndx, 491.0000, 493.9875, 12.5, "NFM")
-        elif band_ndx == 36:
-            return BandBc780(band_ndx, 494.0000, 496.9875, 12.5, "NFM")
-        elif band_ndx == 37:
-            return BandBc780(band_ndx, 497.0000, 499.9875, 12.5, "NFM")
-        elif band_ndx == 38:
-            return BandBc780(band_ndx, 500.0000, 502.9875, 12.5, "NFM")
-        elif band_ndx == 39:
-            return BandBc780(band_ndx, 503.0000, 505.9875, 12.5, "NFM")
-        elif band_ndx == 40:
-            return BandBc780(band_ndx, 506.0000, 508.9875, 12.5, "NFM")
-        elif band_ndx == 41:
-            return BandBc780(band_ndx, 509.0000, 511.9875, 12.5, "NFM")
-        elif band_ndx == 42:
-            return BandBc780(band_ndx, 806.0000, 823.9875, 12.5, "NFM")
-        elif band_ndx == 43:
-            return BandBc780(band_ndx, 849.0125, 850.9875, 12.5, "NFM")
-        elif band_ndx == 44:
-            return BandBc780(band_ndx, 851.0000, 868.9875, 12.5, "NFM")
-        elif band_ndx == 45:
-            return BandBc780(band_ndx, 894.0125, 895.9875, 12.5, "NFM")
-        elif band_ndx == 46:
-            return BandBc780(band_ndx, 896.0000, 901.0000, 12.5, "NFM")
-        elif band_ndx == 47:
-            return BandBc780(band_ndx, 901.0125, 934.9875, 12.5, "NFM")
-        elif band_ndx == 48:
-            return BandBc780(band_ndx, 935.0000, 940.0000, 12.5, "NFM")
-        elif band_ndx == 49:
-            return BandBc780(band_ndx, 940.0125, 956.0000, 12.5, "NFM")
-        elif band_ndx == 50:
-            return BandBc780(band_ndx, 1240.0000, 1300.0000, 12.5, "NFM")
+| 15    | 14     | 162.0000 | 173.9875 | 12.5    | FM         |
+| 16    | 15     | 174.0000 | 215.9500 | 50.0    | WFM        |
+| 17    | 16     | 216.0000 | 224.9950 | 5.0     | FM         |
+| 18    | 17     | 225.0000 | 399.9500 | 50.0    | AM         |
+| 19    | 18     | 400.0000 | 405.9875 | 12.5    | NFM        |
+| 20    | 19     | 406.0000 | 419.9875 | 12.5    | NFM        |
+| 21    | 20     | 420.0000 | 424.9875 | 12.5    | NFM        |
+| 22    | 20     | 425.0000 | 429.9875 | 12.5    | NFM        |
+| 23    | 20     | 430.0000 | 449.9875 | 12.5    | NFM        |
+| 24    | 21     | 450.0000 | 454.9875 | 12.5    | NFM        |
+| 25    | 21     | 455.0000 | 459.9875 | 12.5    | NFM        |
+| 26    | 21     | 460.0000 | 464.9875 | 12.5    | NFM        |
+| 27    | 21     | 465.0000 | 469.9875 | 12.5    | NFM        |
+| 28    | 22     | 470.0000 | 472.9875 | 12.5    | NFM        |
+| 29    | 22     | 473.0000 | 475.9875 | 12.5    | NFM        |
+| 30    | 22     | 476.0000 | 478.9875 | 12.5    | NFM        |
+| 31    | 22     | 479.0000 | 481.9875 | 12.5    | NFM        |
+| 32    | 22     | 482.0000 | 484.9875 | 12.5    | NFM        |
+| 33    | 22     | 485.0000 | 487.9875 | 12.5    | NFM        |
+| 34    | 22     | 488.0000 | 490.9875 | 12.5    | NFM        |
+| 35    | 22     | 491.0000 | 493.9875 | 12.5    | NFM        |
+| 36    | 22     | 494.0000 | 496.9875 | 12.5    | NFM        |
+| 37    | 22     | 497.0000 | 499.9875 | 12.5    | NFM        |
+| 38    | 22     | 500.0000 | 502.9875 | 12.5    | NFM        |
+| 39    | 22     | 503.0000 | 505.9875 | 12.5    | NFM        |
+| 40    | 22     | 506.0000 | 508.9875 | 12.5    | NFM        |
+| 41    | 22     | 509.0000 | 511.9875 | 12.5    | NFM        |
+| 42    | 23     | 806.0000 | 823.9875 | 12.5    | NFM        |
+| 43    | 33     | 849.0125 | 850.9875 | 12.5    | NFM        |
+| 44    | 33     | 851.0000 | 868.9875 | 12.5    | NFM        |
+| 45    | 33     | 894.0125 | 895.9875 | 12.5    | NFM        |
+| 46    | 33     | 896.0000 | 901.0000 | 12.5    | NFM        |
+| 47    | 33     |  901.0125 |  934.9875 | 12.5  | NFM        |
+| 48    | 33     |  935.0000 |  940.0000 | 12.5  | NFM        |
+| 49    | 33     |  940.0125 |  956.0000 | 12.5  | NFM        |
+| 50    | 33     | 1240.0000 | 1300.0000 | 12.5  | NFM        |
