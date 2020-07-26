@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Title:collect_usb0.sh
-# Description:perform collection w/BC785 on USB0
+# Title:test_usb0.sh
+# Description:test to ensure receiver is working
 # Development Environment:OS X 10.10.5
 # Author:G.S. Cole (guycole at gmail dot com)
 #
@@ -11,5 +11,5 @@ ROOT_DIR=/home/gsc/github/mellow-elephant; export ROOT_DIR
 #
 source $ROOT_DIR/src/venv/bin/activate
 #
-python3 $ROOT_DIR/src/collection/collection.py $ROOT_DIR/bin/collect.yaml
+python3 $ROOT_DIR/src/collection/serial_test.py $ROOT_DIR/bin/serial_test.yaml
 #

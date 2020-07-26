@@ -1,20 +1,17 @@
 #
-installationId: 820d1021-75d6-4c83-8487-edbe4b433858
+installationId: 68c8ec34-d843-421b-8465-f375e5574ee3
 #
-# legal receiver types: bc780, rtlsdr, stub
-#receiverType: bc780
-#receiverType: rtlsdr
+# legal receiver types: bc780
 receiverType: bc780
 #
-pickleDirectory: /tmp
+pickleDirectory: /home/gsc/github/mellow-elephant/observations
 #
-pidLockFile: /tmp/lock.pid
+pidLockFile: /home/gsc/github/mellow-elephant/lock.pid
 #
-serialDevice: bogus
+serialDevice: /dev/ttyUSB0
 #
-runMode: once
-#runMode: always
-runDirection: low2high
+#runMode: once
+runMode: always
 #
 frequencyBands:
     - 1

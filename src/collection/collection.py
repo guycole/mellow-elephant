@@ -50,12 +50,14 @@ class Collection:
         :param pickle_directory: directory to contain serialized observations
         :return:
         """
+        fresh_directory = f"{pickle_directory}/fresh"
+
         for band_ndx in frequency_bands:
             observations = self.sample_band(band_ndx, receiver)
 
             pickled_band = PickledBand(installation, band_ndx, observations)
 
-            with open(pickled_band.get_filename(pickle_directory), "w") as writer:
+            with open(pickled_band.get_filename(fresh_directory), "w") as writer:
                 writer.write(pickled_band.to_json())
 
     def execute(self, configuration: dict):

@@ -43,9 +43,15 @@ class Receiver:
         buffer = "%s:%s" % (self.receiver_type, self.serial_device)
         return buffer
 
+    def initialize_radio(self):
+        """
+        bring radio to a known state
+        """
+        return None
+
     def invoke_radio(self, command, argz):
         """
-        invoke the external command line utility and return response
+        write command to radio and return response
         """
         return "bogus"
 
@@ -55,7 +61,7 @@ class Receiver:
         """
         return False
 
-    def tune_radio(self, frequency):
+    def set_frequency(self, frequency):
         """
         tune radio frequency
         """
@@ -66,6 +72,12 @@ class Receiver:
         return current modulation mode
         """
         return "XX"
+
+    def set_modulation(self, modulation):
+        """
+        define current modulation type
+        """
+        return None
 
     def get_raw_sample(self):
         """
@@ -79,12 +91,39 @@ class ReceiverBc780(Receiver):
         Receiver.__init__(self, "bc780", serial_device)
         self.port = serial.Serial(serial_device, baudrate=9800, timeout=1.0)
 
+    def initialize_radio(self):
+        """
+        bring radio to a known state
+        """
+        self.logger.debug("initialize radio")
+
+        # attenuator no
+        result = self.invoke_radio("ATF", "")
+
+        # auto recording no
+        result = self.invoke_radio("ARF", "")
+
+        # delay no
+        result = self.invoke_radio("DLF", "")
+
+        # lcd off
+        result = self.invoke_radio("LTF", "")
+
+        # trunk monitor off
+        result = self.invoke_radio("IDF", "")
+
+        # squelch notification off
+        result = self.invoke_radio("QUF", "")
+
+        # priority notification off
+        result = self.invoke_radio("RIF", "")
+
     def invoke_radio(self, command: str, argz: str) -> str:
         """
         send command to radio and wait for response
         """
         tx_buffer = "%s%s\r" % (command, argz)
-        #        print(f"tx_buffer {tx_buffer}")
+        print(f"tx_buffer {tx_buffer}")
 
         self.port.write(tx_buffer.encode())
 
@@ -97,7 +136,7 @@ class ReceiverBc780(Receiver):
             else:
                 rx_buffer += str(raw_buffer)
 
-        #        print(rx_buffer)
+        print(rx_buffer)
 
         return rx_buffer.strip()
 
@@ -116,7 +155,7 @@ class ReceiverBc780(Receiver):
         else:
             return True
 
-    def tune_radio(self, frequency: int) -> str:
+    def set_frequency(self, frequency: int) -> str:
         """
         tune scanner to specified frequency
         returns frequency as integer
@@ -160,7 +199,7 @@ class ReceiverBc780(Receiver):
         tune to frequency and sample signal strength
         return tuple of frequency, strength and modulation
         """
-        retstat = self.tune_radio(frequency)
+        retstat = self.set_frequency(frequency)
         if retstat.find("OK") > 0:
             self.logger.debug(f"radio tune OK {frequency}")
         else:
@@ -178,6 +217,8 @@ class ReceiverBc780(Receiver):
         sample an entire frequency band
         return collection of observations
         """
+        self.initialize_radio()
+
         frequency_band = self.band_factory.factory(band_ndx)
 
         counter = 0
@@ -192,10 +233,6 @@ class ReceiverBc780(Receiver):
             if sample is not None:
                 print(sample)
                 result_list.append(sample)
-
-                counter += 1
-                if counter > 5:
-                    return result_list
 
             current_frequency += step_frequency
 

@@ -44,7 +44,7 @@ class PickledBand:
         temp['create_time'] = self.create_time
         temp['installation'] = self.installation
         temp['observations'] = observation_list
-        temp['sortie'] = uuid.uuid4()
+        temp['sortie'] = str(uuid.uuid4())
         temp['version'] = self.version
 
         return json.dumps(temp)

@@ -1,8 +1,0 @@
-#
-pickleDirectory: /var/mellow/elephant/pickle
-plotDirectory: /var/mellow/elephant/plot
-#
-gnuplotCommand: /opt/local/bin/gnuplot
-#
-s3bucket: test2-digiburo-com
-#
