@@ -5,14 +5,11 @@ Mellow Elephant is an application which uses old radio scanners such as the [Uni
 
 Here are some [sample graphs](https://github.com/guycole/mellow-elephant/dox/grafix/rplots.pdf) produced from Mellow Elephant data (August, 2016)
 
-The BC-780-XLT was one of the earliest radio scanners to allow control by computer, in this case via [RS-232](https://en.wikipedia.org/wiki/RS-232).  Controlling the scanner is similar to the [Hayes command set](https://en.wikipedia.org/wiki/Hayes_command_set) in that one writes a simple ASCII string to the device and then read the results.  There is a subset of the BC-780-XLT command set summarized in a table near the end of this file.
+The BC-780-XLT was one of the earliest radio scanners to allow control by computer, in this case via [RS-232](https://en.wikipedia.org/wiki/RS-232).  Controlling the scanner is similar to the [Hayes command set](https://en.wikipedia.org/wiki/Hayes_command_set) in that one writes a simple ASCII string to the device and then read the results.  There is more about the BC-780-XLT command set at the end of this file.
 
 There are many popular variations on the BC-780-XLT such as the Radio Shack PRO-2052 all w/similar behavior.  Examples of the BC-780-XLT are readily available via eBay.  The BC-780-XLT are mediocre receivers, and do suffer from poor intermods (in my case, harmonics from commercial FM broadcasters are a problem).  
 
-The image below depicts my current deployment strategy, I use a [Raspberry Pi 3](https://en.wikipedia.org/wiki/Raspberry_Pi) running mellow-elephant to control a BC-780-XLT via RS-232 and a [USB](https://en.wikipedia.org/wiki/USB) adapter.
-
-// Deployment Graphic
-// System Picture
+This [image](https://github.com/guycole/mellow-elephant/dox/grafix/overview.png) depicts my current deployment strategy, I use a [Raspberry Pi 3](https://en.wikipedia.org/wiki/Raspberry_Pi) running mellow-elephant to control a BC-780-XLT via RS-232 and a [USB](https://en.wikipedia.org/wiki/USB) adapter.  Here is a [photo](https://github.com/guycole/mellow-elephant/dox/grafix/overview.png) of the actual equipment.  
 
 getting started
 ==================
