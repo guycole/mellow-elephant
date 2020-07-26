@@ -3,7 +3,7 @@ mellow-elephant introduction
 
 Mellow Elephant is an application which uses old radio scanners such as the [Uniden BC-780-XLT](https://wiki.radioreference.com/index.php/BC780XLT) (or similar) to create a database of spectrum utilization.  The database is created by mechanically stepping through the spectrum and observing signal strength.  Sampling continues for an extended period.  Continuous emitters should be observed on every pass, while transient emitters might take awhile to discover.
 
-Here are some [sample graphs](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/rplots.pdf) produced from Mellow Elephant data (August, 2016)
+Here are some (big file!) [sample graphs](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/rplots.pdf) produced from Mellow Elephant data (August, 2016)
 
 The BC-780-XLT was one of the earliest radio scanners to allow control by computer, in this case via [RS-232](https://en.wikipedia.org/wiki/RS-232).  Controlling the scanner is similar to the [Hayes command set](https://en.wikipedia.org/wiki/Hayes_command_set) in that one writes a simple ASCII string to the device and then read the results.  There is more about the BC-780-XLT command set at the end of this file.
 
