@@ -1,4 +1,4 @@
-mellow-elephant introduction
+introduction
 ==================
 
 Mellow Elephant is an application which uses old radio scanners such as the [Uniden BC-780-XLT](https://wiki.radioreference.com/index.php/BC780XLT) (or similar) to create a database of spectrum utilization.  The database is created by mechanically stepping through the spectrum and observing signal strength.  Sampling continues for an extended period.  Continuous emitters should be observed on every pass, while transient emitters might take awhile to discover.
