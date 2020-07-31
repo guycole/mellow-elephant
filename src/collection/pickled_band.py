@@ -29,13 +29,27 @@ class PickledBand:
         convert all the collected observations to json and add a header
         :return: observations as serialized json
         """
+        ma_average = 0
+        ma_buffer = []
+        ma_length = 5
+        ma_sum = 0
+
         observation_list = []
         for observation in self.observations:
+            if len(ma_buffer) > ma_length:
+                ma_buffer.pop(0)
+
+            ma_buffer.append(observation[0])
+            ma_sum = sum(ma_buffer)
+            ma_average = int(ma_sum/len(ma_buffer))
+
             element = {
                 'strength': observation[0],
                 'frequency': observation[1],
                 'modulation': observation[2],
                 'timestamp': observation[3],
+                'moving_average': ma_average,
+                'peaker': True if observation[0] > (ma_average * 1.3) else False
             }
             observation_list.append(element)
 
