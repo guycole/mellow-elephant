@@ -5,6 +5,7 @@
 # Author:G.S. Cole (guycole at gmail dot com)
 #
 import logging
+import random
 import serial
 import time
 
@@ -20,12 +21,6 @@ class ReceiverFactory:
 
         if receiver_type == "bc780":
             return ReceiverBc780(serial_device)
-        #        elif receiver_type == 'rtlsdr':
-        #            pass
-        #            return ReceiverRtlSdr(serial_device)
-        #        elif receiver_type == 'stub':
-        #            pass
-        #            return ReceiverStub(serial_device)
         else:
             print("unknown receiverType:%s" % self.receiver_type)
 
@@ -89,13 +84,20 @@ class Receiver:
 class ReceiverBc780(Receiver):
     def __init__(self, serial_device):
         Receiver.__init__(self, "bc780", serial_device)
-        self.port = serial.Serial(serial_device, baudrate=9800, timeout=1.0)
+
+        if serial_device == "/dev/ttyStub":
+            self.port = None
+        else:
+            self.port = serial.Serial(serial_device, baudrate=9800, timeout=1.0)
 
     def initialize_radio(self):
         """
         bring radio to a known state
         """
         self.logger.debug("initialize radio")
+
+        if self.serial_device == "/dev/ttyStub":
+            return
 
         # attenuator no
         result = self.invoke_radio("ATF", "")
@@ -146,6 +148,9 @@ class ReceiverBc780(Receiver):
         """
         #
         self.logger.debug("test_radio")
+
+        if self.serial_device == "/dev/ttyStub":
+            return True
 
         result = self.invoke_radio("SI", "")
 
@@ -199,6 +204,10 @@ class ReceiverBc780(Receiver):
         tune to frequency and sample signal strength
         return tuple of frequency, strength and modulation
         """
+        if self.serial_device == "/dev/ttyStub":
+            strength = random.randint(20, 200)
+            return (strength, frequency, "XXX", int(time.time()))
+
         retstat = self.set_frequency(frequency)
         if retstat.find("OK") > 0:
             self.logger.debug(f"radio tune OK {frequency}")
@@ -231,7 +240,6 @@ class ReceiverBc780(Receiver):
             tweaked_frequency = int(round(current_frequency * 10000))
             sample = self.sample_radio(tweaked_frequency)
             if sample is not None:
-                print(sample)
                 result_list.append(sample)
 
             current_frequency += step_frequency

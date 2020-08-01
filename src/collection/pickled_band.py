@@ -9,6 +9,7 @@ import logging
 import time
 import uuid
 
+
 class PickledBand:
     def __init__(self, installation, band_ndx, observations):
         self.logger = logging.getLogger()
@@ -41,24 +42,24 @@ class PickledBand:
 
             ma_buffer.append(observation[0])
             ma_sum = sum(ma_buffer)
-            ma_average = int(ma_sum/len(ma_buffer))
+            ma_average = int(ma_sum / len(ma_buffer))
 
             element = {
-                'strength': observation[0],
-                'frequency': observation[1],
-                'modulation': observation[2],
-                'time_stamp': observation[3],
-                'moving_average': ma_average,
-                'peaker': 1 if observation[0] > (ma_average * 1.3) else 0
+                "strength": observation[0],
+                "frequency": observation[1],
+                "modulation": observation[2],
+                "time_stamp": observation[3],
+                "moving_average": ma_average,
+                "peaker": 1 if observation[0] > (ma_average * 1.3) else 0,
             }
             observation_list.append(element)
 
         temp = {}
-        temp['band_ndx'] = self.band_ndx
-        temp['create_time'] = self.create_time
-        temp['installation'] = self.installation
-        temp['observations'] = observation_list
-        temp['sortie'] = str(uuid.uuid4())
-        temp['version'] = self.version
+        temp["band_ndx"] = self.band_ndx
+        temp["create_time"] = self.create_time
+        temp["installation"] = self.installation
+        temp["observations"] = observation_list
+        temp["sortie"] = str(uuid.uuid4())
+        temp["version"] = self.version
 
         return json.dumps(temp)

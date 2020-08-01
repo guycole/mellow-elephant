@@ -34,6 +34,16 @@ class Processing:
 
         db.write_observation(observation_file, observations, band_ndx, sortie_key)
 
+    def peaker_db(self, db_directory, observations, band_ndx, sortie_key, db):
+        peakers_file = f"{db_directory}/peakers.sqlite"
+
+        if os.path.exists(peakers_file) and os.path.isfile(peakers_file):
+            pass
+        else:
+            db.create_peaker(peakers_file)
+
+        db.write_peaker(peakers_file, observations, band_ndx, sortie_key)
+
     def sortie_db(self, db_directory, band_ndx, create_time, installation_id, sortie_key, db):
         sortie_file = f"{db_directory}/sortie.sqlite"
 
@@ -65,12 +75,12 @@ class Processing:
                 if version == 1:
                     self.sortie_db(db_directory, band_ndx, create_time, installation_id, sortie_key, db)
                     self.observation_db(db_directory, observations, band_ndx, sortie_key, db)
+                    self.peaker_db(db_directory, observations, band_ndx, sortie_key, db)
+
+                    # write graph
                 else:
                     self.logger.error("unsupported json version")
                     return -1
-
-                    # write peakers
-                    # write graph
 
     def execute(self, configuration, database):
         db_directory = configuration["dbDirectory"]

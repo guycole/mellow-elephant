@@ -37,12 +37,48 @@ class DataBase:
             strength = observation['strength']
             frequency = observation['frequency']
             modulation = observation['modulation']
-            time_stamp = observation['timestamp']
+            time_stamp = observation['time_stamp']
             moving_average = observation['moving_average']
             peaker = observation['peaker']
 
             insert = f"INSERT INTO observation(sortie_key, band_ndx, strength, frequency, modulation, time_stamp, moving_average, peaker) VALUES('{sortie_key}', {band_ndx}, {strength}, {frequency}, '{modulation}', {time_stamp}, {moving_average}, {peaker})"
             connection.execute(insert)
+
+        connection.commit()
+        connection.close()
+
+    def create_peaker(self, peaker_file):
+        self.logger.info(f"create peaker db table")
+
+        create_table = f"CREATE TABLE peaker(sortie_key text, band_ndx integer, strength integer, frequency integer, modulation text, time_stamp integer, moving_average integer, peaker integer)"
+
+        create_index1 = f"CREATE INDEX ndx1 ON peaker(sortie_key)"
+        create_index2 = f"CREATE INDEX ndx2 ON peaker(band_ndx)"
+        create_index3 = f"CREATE INDEX ndx3 ON peaker(frequency)"
+
+        connection = sqlite3.connect(peaker_file)
+        connection.execute(create_table)
+        connection.execute(create_index1)
+        connection.execute(create_index2)
+        connection.execute(create_index3)
+        connection.commit()
+        connection.close()
+
+    def write_peaker(self, peaker_file, observations, band_ndx, sortie_key):
+        connection = sqlite3.connect(peaker_file)
+
+        for observation in observations:
+            print(observation)
+            strength = observation['strength']
+            frequency = observation['frequency']
+            modulation = observation['modulation']
+            time_stamp = observation['time_stamp']
+            moving_average = observation['moving_average']
+            peaker = observation['peaker']
+
+            if peaker > 0:
+                insert = f"INSERT INTO peaker(sortie_key, band_ndx, strength, frequency, modulation, time_stamp, moving_average, peaker) VALUES('{sortie_key}', {band_ndx}, {strength}, {frequency}, '{modulation}', {time_stamp}, {moving_average}, {peaker})"
+                connection.execute(insert)
 
         connection.commit()
         connection.close()

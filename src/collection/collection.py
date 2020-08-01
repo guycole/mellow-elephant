@@ -54,7 +54,6 @@ class Collection:
 
         for band_ndx in frequency_bands:
             observations = self.sample_band(band_ndx, receiver)
-
             pickled_band = PickledBand(installation, band_ndx, observations)
 
             with open(pickled_band.get_filename(fresh_directory), "w") as writer:
