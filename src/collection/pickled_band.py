@@ -47,9 +47,9 @@ class PickledBand:
                 'strength': observation[0],
                 'frequency': observation[1],
                 'modulation': observation[2],
-                'timestamp': observation[3],
+                'time_stamp': observation[3],
                 'moving_average': ma_average,
-                'peaker': True if observation[0] > (ma_average * 1.3) else False
+                'peaker': 1 if observation[0] > (ma_average * 1.3) else 0
             }
             observation_list.append(element)
 

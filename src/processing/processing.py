@@ -10,6 +10,8 @@ import os
 import sys
 import yaml
 
+from database import DataBase
+
 
 class Processing:
     def __init__(self, logger_level: int):
@@ -22,66 +24,68 @@ class Processing:
         self.logger.error("error level message")
         self.logger.critical("critical level message")
 
-    def moving_average(self, observations):
-        ma_average = 0
-        ma_buffer = []
-        ma_length = 5
-        ma_sum = 0
+    def observation_db(self, db_directory, observations, band_ndx, sortie_key, db):
+        observation_file = f"{db_directory}/observation.sqlite"
 
-        results = []
-        # expect observations to be sorted by frequency, low to high
-        for observation in observations:
-            if len(ma_buffer) > ma_length:
-                ma_buffer.pop(0)
+        if os.path.exists(observation_file) and os.path.isfile(observation_file):
+            pass
+        else:
+            db.create_observation(observation_file)
 
-            ma_buffer.append(observation['strength'])
-            ma_sum = sum(ma_buffer)
-            observation['moving_average'] = int(ma_sum/len(ma_buffer))
-            results.append(observation)
+        db.write_observation(observation_file, observations, band_ndx, sortie_key)
 
-        return results
+    def sortie_db(self, db_directory, band_ndx, create_time, installation_id, sortie_key, db):
+        sortie_file = f"{db_directory}/sortie.sqlite"
 
-    def write_observations(self, db_directory, installation, sortie, observations):
-        directory_name = f"{db_directory}/{installation}"
-        if os.path.exists(directory_name) is False:
-            os.mkdir(directory_name, 0o775)
+        if os.path.exists(sortie_file) and os.path.isfile(sortie_file):
+            selected = db.select_sortie(sortie_file, sortie_key)
+            if len(selected) < 1:
+                db.write_sortie(sortie_file, band_ndx, create_time, installation_id, sortie_key)
+            else:
+                self.logger.info(f"skipping duplicate sortie:{sortie_key}")
+        else:
+            db.create_sortie(sortie_file)
+            db.write_sortie(sortie_file, band_ndx, create_time, installation_id, sortie_key)
 
-        for observation in observations:
-            print(observation.keys())
-            file_name = f"{directory_name}/{observation['frequency']}"
-            with open(f"{file_name}", "a+") as writer:
-                writer.write(f"{observation['strength']}|{observation['modulation']}|{observation['timestamp']}|{observation['moving_average']}|{sortie}\n")
+    def fresh_candidate(self, file_name, db_directory, db):
+        self.logger.info(f"fresh:{file_name}")
 
-    def write_sortie(self, db_directory, installation, sortie, create_time, band_ndx):
-        with open(f"{db_directory}/sortie.log", "a+") as writer:
-            writer.write(f"{band_ndx}|{create_time}|{installation}|{sortie}\n")
-
-    def process_candidate(self, file_name, db_directory):
         with open(file_name, newline='') as fp:
             raw_buffer = fp.readlines()
             if len(raw_buffer) == 1:
                 dict_buffer = json.loads(raw_buffer[0])
-                if dict_buffer['version'] == 1:
-                    self.write_sortie(db_directory, dict_buffer['installation'], dict_buffer['sortie'], dict_buffer['create_time'], dict_buffer['band_ndx'])
-                    cooked = self.moving_average(dict_buffer['observations'])
-                    self.write_observations(db_directory, dict_buffer['installation'], dict_buffer['sortie'], cooked)
+
+                band_ndx = dict_buffer['band_ndx']
+                create_time = dict_buffer['create_time']
+                installation_id = dict_buffer['installation']
+                observations = dict_buffer['observations']
+                sortie_key = dict_buffer['sortie']
+                version = dict_buffer['version']
+
+                if version == 1:
+                    self.sortie_db(db_directory, band_ndx, create_time, installation_id, sortie_key, db)
+                    self.observation_db(db_directory, observations, band_ndx, sortie_key, db)
+                else:
+                    self.logger.error("unsupported json version")
+                    return -1
 
                     # write peakers
                     # write graph
 
-    def execute(self, configuration: dict):
+    def execute(self, configuration, database):
         db_directory = configuration["dbDirectory"]
 
         pickle_directory = configuration["pickleDirectory"]
+        archive_directory = f"{pickle_directory}/archive"
         fresh_directory = f"{pickle_directory}/fresh"
-        process_directory = f"{pickle_directory}/processing"
 
         candidates = os.listdir(path=fresh_directory)
+        self.logger.info(f"process population:{len(candidates)}")
         for candidate in candidates:
-            self.logger.info(f"process {candidate}")
-            self.process_candidate(f"{fresh_directory}/{candidate}", db_directory)
+            raw_filename = f"{fresh_directory}/{candidate}"
+            self.fresh_candidate(raw_filename, db_directory, database)
 
-            command = f"mv {fresh_directory}/{candidate} {process_directory}"
+            command = f"mv {raw_filename} {archive_directory}"
             print(command)
 
 print("start")
@@ -95,11 +99,15 @@ if __name__ == "__main__":
     else:
         file_name = "config.yaml"
 
+    logging_level = logging.INFO
+    logging_level = logging.DEBUG
+
+    database = DataBase(logging_level)
+
     with open(file_name, "r") as infile:
         try:
-            #            collection = Collection(logging.INFO)
-            processing = Processing(logging.DEBUG)
-            processing.execute(yaml.load(infile, Loader=yaml.FullLoader))
+            processing = Processing(logging_level)
+            processing.execute(yaml.load(infile, Loader=yaml.FullLoader), database)
         except yaml.YAMLError as exception:
             print(exception)
 

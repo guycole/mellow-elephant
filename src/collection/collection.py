@@ -105,10 +105,12 @@ if __name__ == "__main__":
     else:
         file_name = "config.yaml"
 
+    logging_level = logging.INFO
+    logging_level = logging.DEBUG
+
     with open(file_name, "r") as infile:
         try:
-            #            collection = Collection(logging.INFO)
-            collection = Collection(logging.DEBUG)
+            collection = Collection(logging_level)
             collection.execute(yaml.load(infile, Loader=yaml.FullLoader))
         except yaml.YAMLError as exception:
             print(exception)
