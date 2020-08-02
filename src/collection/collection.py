@@ -14,7 +14,7 @@ from receiver import ReceiverFactory
 
 
 class Collection:
-    def __init__(self, logger_level: int):
+    def __init__(self, logger_level: int, configuration: dict):
         logging.basicConfig(format="%(asctime)s %(message)s", level=logger_level)
 
         self.logger = logging.getLogger()
@@ -24,6 +24,14 @@ class Collection:
         self.logger.error("error level message")
         self.logger.critical("critical level message")
 
+        self.pickle_directory = configuration["pickleDirectory"]
+        self.frequency_bands = configuration["frequencyBands"]
+        self.installation = configuration["installationId"]
+        self.receiver_type = configuration["receiverType"]
+        self.serial_device = configuration["serialDevice"]
+        self.pid_lock_file = configuration["pidLockFile"]
+        self.run_mode = configuration["runMode"]
+
     def sample_band(self, band_ndx: int, receiver: object) -> list:
         """
         Sample a frequency band
@@ -31,52 +39,36 @@ class Collection:
         :param receiver: object
         :return: observations list
         """
-        self.logger.info(f"now walking band {band_ndx} {receiver}")
+        log_message = "now walking band %d %s" % (band_ndx, receiver)
+        self.logger.info(log_message)
 
         return receiver.sample_band(band_ndx)
 
-    def runner(
-        self,
-        frequency_bands: list,
-        receiver: object,
-        installation: str,
-        pickle_directory: str,
-    ):
+    def runner(self, receiver: object):
         """
         Drive a collection pass (sample all specified frequency bands)
-        :param frequency_bands: list of indices into receiver specific catalog
         :param receiver: object
-        :param installation: unique installation identifier
-        :param pickle_directory: directory to contain serialized observations
         :return:
         """
-        fresh_directory = f"{pickle_directory}/fresh"
+        fresh_directory = "%s/fresh" % self.pickle_directory
 
-        for band_ndx in frequency_bands:
+        for band_ndx in self.frequency_bands:
             observations = self.sample_band(band_ndx, receiver)
-            pickled_band = PickledBand(installation, band_ndx, observations)
+            pickled_band = PickledBand(self.installation, band_ndx, observations)
 
             with open(pickled_band.get_filename(fresh_directory), "w") as writer:
-                writer.write(pickled_band.to_json())
+                writer.write(pickled_band.to_json)
 
-    def execute(self, configuration: dict):
-        pickle_directory = configuration["pickleDirectory"]
-        frequency_bands = configuration["frequencyBands"]
-        installation = configuration["installationId"]
-        receiver_type = configuration["receiverType"]
-        serial_device = configuration["serialDevice"]
-        pid_lock_file = configuration["pidLockFile"]
-        run_mode = configuration["runMode"]
-
+    def execute(self):
         pid_lock = PidLock()
-        if pid_lock.lock_test(pid_lock_file):
+        if pid_lock.lock_test(self.pid_lock_file):
             self.logger.info("active pid lock noted")
         else:
             self.logger.info("write fresh pid lock")
-            pid_lock.write_lock(pid_lock_file)
+            pid_lock.write_lock(self.pid_lock_file)
 
             receiver_factory = ReceiverFactory()
-            current_receiver = receiver_factory.factory(receiver_type, serial_device)
+            current_receiver = receiver_factory.factory(self.receiver_type, self.serial_device)
 
             if current_receiver.test_radio() is True:
                 self.logger.info("receiver noted")
@@ -86,12 +78,9 @@ class Collection:
 
             run_flag = True
             while run_flag:
-                self.runner(
-                    frequency_bands, current_receiver, installation, pickle_directory
-                )
-                if run_mode == "once":
+                self.runner(current_receiver)
+                if self.run_mode == "once":
                     run_flag = False
-
 
 print("start")
 
@@ -109,8 +98,8 @@ if __name__ == "__main__":
 
     with open(file_name, "r") as infile:
         try:
-            collection = Collection(logging_level)
-            collection.execute(yaml.load(infile, Loader=yaml.FullLoader))
+            collection = Collection(logging_level, yaml.load(infile, Loader=yaml.FullLoader))
+            collection.execute()
         except yaml.YAMLError as exception:
             print(exception)
 

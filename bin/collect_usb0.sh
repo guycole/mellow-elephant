@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Title:collect_usb0.sh
-# Description:perform collection w/BC785 on USB0
+# Description:perform collection w/BC780 on USB0
 # Development Environment:OS X 10.10.5
 # Author:G.S. Cole (guycole at gmail dot com)
 #

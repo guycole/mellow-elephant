@@ -1,6 +1,6 @@
 #
 # Title:pickled_band.py
-# Description: persisted band
+# Description: JSON persisted band (no longer uses Python pickle)
 # Development Environment:OS X 10.15.5/Python 3.7.6
 # Author:G.S. Cole (guycole at gmail dot com)
 #
@@ -21,10 +21,11 @@ class PickledBand:
         self.version = 1
 
     def get_filename(self, directory):
-        file_name = f"{directory}/{self.create_time}-{self.band_ndx:02d}.json"
-        self.logger.info(f"fresh pickle file:{file_name}")
+        file_name = "%s/%s-%02d.json" % (directory, self.create_time, self.band_ndx)
+        self.logger.info("fresh pickle file:%s" % file_name)
         return file_name
 
+    @property
     def to_json(self) -> str:
         """
         convert all the collected observations to json and add a header

@@ -125,7 +125,7 @@ class ReceiverBc780(Receiver):
         send command to radio and wait for response
         """
         tx_buffer = "%s%s\r" % (command, argz)
-        print(f"tx_buffer {tx_buffer}")
+        print("tx_buffer %s" % tx_buffer)
 
         self.port.write(tx_buffer.encode())
 
@@ -210,9 +210,9 @@ class ReceiverBc780(Receiver):
 
         retstat = self.set_frequency(frequency)
         if retstat.find("OK") > 0:
-            self.logger.debug(f"radio tune OK {frequency}")
+            self.logger.debug("radio tune OK %d" % frequency)
         else:
-            self.logger.debug(f"radio tune failure {frequency}")
+            self.logger.debug("radio tune failure %d" % frequency)
             return None
 
         modulation = self.get_modulation()

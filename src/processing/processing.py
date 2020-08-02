@@ -42,7 +42,7 @@ class Processing:
         else:
             db.create_peaker(peakers_file)
 
-        db.write_peaker(peakers_file, observations, band_ndx, sortie_key)
+        db.write_peaker(peakers_file, observations)
 
     def sortie_db(self, db_directory, band_ndx, create_time, installation_id, sortie_key, db):
         sortie_file = f"{db_directory}/sortie.sqlite"
