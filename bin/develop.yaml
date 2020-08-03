@@ -8,7 +8,8 @@ pickleDirectory: /tmp
 #
 pidLockFile: /tmp/lock.pid
 #
-serialDevice: /dev/ttyUSB0
+#serialDevice: /dev/ttyUSB0
+serialDevice: /dev/ttyStub
 #
 runMode: once
 #runMode: always

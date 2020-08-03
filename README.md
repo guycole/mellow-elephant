@@ -23,6 +23,14 @@ Establish RS-232 configuration.
 
 Test (need test application)
 
+Raspberry Pi
+Cannakit "Ultimate Starter Kit" (PI3-STR32-C4-BLK-R10) 
+https://www.canakit.com/raspberry-pi-3-ultimate-kit.html
+
+apt-get update/upgrade
+apt-get install virtualenv
+
+
 configure for collection
 ==================
 

@@ -1,0 +1,4 @@
+#
+56 * * * * /home/pi/github/mellow-elephant/bin/collect_usb0.sh >/dev/null 2>&1
+#26 * * * * /home/pi/github/mellow-elephant/bin/collect_usb1.sh >/dev/null 2>&1
+#

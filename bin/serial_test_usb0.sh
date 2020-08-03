@@ -11,5 +11,5 @@ ROOT_DIR=/home/gsc/github/mellow-elephant; export ROOT_DIR
 #
 source $ROOT_DIR/src/venv/bin/activate
 #
-python3 $ROOT_DIR/src/collection/serial_test.py $ROOT_DIR/bin/serial_test.yaml
+python3 $ROOT_DIR/src/serial_test.py $ROOT_DIR/bin/serial_test.yaml
 #
