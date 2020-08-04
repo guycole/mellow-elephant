@@ -33,7 +33,7 @@ class PickledBand:
         """
         ma_average = 0
         ma_buffer = []
-        ma_length = 13
+        ma_length = 71
         ma_sum = 0
 
         observation_list = []

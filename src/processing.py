@@ -34,18 +34,30 @@ class Processing:
         self.graph_directory = configuration["grafDirectory"]
 
     def graph_write(self, file_name, observations, band_ndx, sortie_key):
-        data_file_name = "/tmp/plot.dat"
         graph_file_name = "%s/%s" % (self.graph_directory, file_name.replace('json', 'png'))
         plot_file_name = "/tmp/plot.dem"
 
-        with open(data_file_name, "w") as writer:
+        strength_file_name = "/tmp/strength.dat"
+        threshold_file_name = "/tmp/threshold.dat"
+
+        bc780band_factory = BandBc780Factory()
+        bc780band = bc780band_factory.factory(band_ndx)
+
+        plot_title = "set title '%f mHz to %f mHz in %f kHz steps (band %d)'\n" % (bc780band.frequency_low, bc780band.frequency_high, bc780band.frequency_step, bc780band.band_ndx)
+
+        with open(strength_file_name, "w") as writer:
             for observation in observations:
                 strength = observation['strength']
                 frequency = observation['frequency']
-                moving_average = observation['moving_average']
-                peaker = observation['peaker']
 
                 writer.write("%f %d\n" % (frequency/10000.0, strength))
+
+        with open(threshold_file_name, "w") as writer:
+            for observation in observations:
+                frequency = observation['frequency']
+                moving_average = observation['moving_average']
+
+                writer.write("%f %d\n" % (frequency/10000.0, moving_average))
 
         with open(plot_file_name, "w") as writer:
             writer.write("set terminal png small\n")
@@ -53,14 +65,14 @@ class Processing:
             writer.write("set grid\n")
             writer.write("set style data line\n")
             writer.write("set output '%s'\n" % graph_file_name)
-            writer.write("set title 'testaroo'\n")
-            writer.write("plot '%s'\n" % data_file_name)
+            writer.write(plot_title)
+            writer.write("plot '%s' with lp, '%s' with lines\n" % (strength_file_name, threshold_file_name))
 
         command = "%s %s" % ('/usr/local/bin/gnuplot', plot_file_name)
         os.system(command)
 
-        os.unlink(data_file_name)
-        os.unlink(plot_file_name)
+#        os.unlink(data_file_name)
+#        os.unlink(plot_file_name)
 
     def observation_db(self, observations, band_ndx, sortie_key, db):
         observation_file = "%s/observation.sqlite" % self.db_directory
