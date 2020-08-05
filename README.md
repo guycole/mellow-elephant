@@ -25,7 +25,7 @@ If you like, you can reset a BC-780-XLT to factory settings by powering off,
 then holding down 2, 9 and "MAN" keys while powering on.  The scanner
 will set the serial port to 9600, which is what Mellow Elephant uses.
 
-Look at the ![scanner display](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/bc_780_display.png).  
+Look at the scanner display ![](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/bc_780_display.png).  
 
 Do you see "RMT" (in the square)?  If so, 
 you are all ready for "Remote" mode.  If not, press "E" for 2 seconds and
