@@ -1,4 +1,5 @@
-# introduction
+introduction
+==================
 
 Mellow Elephant is an application which uses old radio scanners such as the [Uniden BC-780-XLT](https://wiki.radioreference.com/index.php/BC780XLT) (or similar) to create a database of spectrum utilization.  The database is created by mechanically stepping through the spectrum and observing signal strength.  Sampling continues for an extended period.  Continuous emitters should be observed on every pass, while transient emitters might take awhile to discover.
 
@@ -9,25 +10,22 @@ Here is a process overview of Mellow Elephant ![overview](https://github.com/guy
 Uniden BC-780-XLT
 ==================
 
-The BC-780-XLT was one of the earliest radio scanners to allow control by computer, in this case via [RS-232](https://en.wikipedia.org/wiki/RS-232).  Controlling the scanner is similar to the [Hayes command set](https://en.wikipedia.org/wiki/Hayes_command_set) in that one writes a simple ASCII string to the device and then read the results.  There is more about the BC-780-XLT command set at the end of this file.
+The BC-780-XLT was one of the earliest radio scanners to allow control by computer, in this case via [RS-232](https://en.wikipedia.org/wiki/RS-232).  Controlling the scanner is similar to the [Hayes command set](https://en.wikipedia.org/wiki/Hayes_command_set) in that one writes a simple ASCII string to the device and then read the results.  There is more about the BC-780-XLT command set near the end of this file.
 
 There are many popular variations on the BC-780-XLT such as the Radio Shack PRO-2052 all w/similar behavior.  Examples of the BC-780-XLT are readily available via eBay.  The BC-780-XLT are mediocre receivers, and do suffer from poor intermods (in my case, harmonics from commercial FM broadcasters are a problem).  
 
-The BC-780-XLT defines chunks of spectrum into bands (table at end of file)
-which loosely map to spectrum allocation.  Mellow Elephant can be configured
-to search or ignore by Uniden band.
+The BC-780-XLT defines chunks of spectrum into bands (table at end of file) which loosely map to spectrum service allocation.  Mellow Elephant can be configured to search or ignore by Uniden band.
 
 getting started
 ==================
 
-Ready to put an old radio to work?  You will need a RS-232 cable and (probably) a USB to RS-232 converter.  Here are some [cabling instructions]
-(https://www.manualslib.com/manual/185050/Uniden-Bc780xlt.html?page=73)
+Ready to put an old radio to work?  You will need a RS-232 cable and (probably) a USB to RS-232 converter.  Here are some [cabling instructions](https://www.manualslib.com/manual/185050/Uniden-Bc780xlt.html?page=73)
 
 If you like, you can reset a BC-780-XLT to factory settings by powering off,
 then holding down 2, 9 and "MAN" keys while powering on.  The scanner
 will set the serial port to 9600, which is what Mellow Elephant uses.
 
-Look at the [scanner display](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/bc_780_display.png).  
+Look at the ![scanner display](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/bc_780_display.png).  
 
 Do you see "RMT" (in the square)?  If so, 
 you are all ready for "Remote" mode.  If not, press "E" for 2 seconds and
