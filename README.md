@@ -5,7 +5,10 @@ Mellow Elephant is an application which uses old radio scanners such as the [Uni
 
 Here is a sample graph from Mellow Elephant of my local FM broadcast band. The line w/ticks represents signal strength (and each tick is a sample), and the peak values represent active emitters.  The continuous line represents a moving average signal strength and establishes a signal threshold. ![sample graph](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/1596503454-10.png)
 
-Here is a process overview of Mellow Elephant ![overview](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/overview.png).  I use a [Raspberry Pi 3](https://en.wikipedia.org/wiki/Raspberry_Pi) running mellow-elephant to control a BC-780-XLT via RS-232 and a [USB](https://en.wikipedia.org/wiki/USB) adapter.  Here is a [photo]( https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/overview.png) of the actual equipment.  
+Here is a process overview of Mellow Elephant ![overview](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/overview.png).  
+
+I use a [Raspberry Pi 3](https://en.wikipedia.org/wiki/Raspberry_Pi) running mellow-elephant to control a BC-780-XLT via RS-232 and a [USB](https://en.wikipedia.org/wiki/USB) adapter.  Here is a photo of the actual equipment. ![]( https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/elephant_rear.png)
+
 
 Uniden BC-780-XLT
 ==================
@@ -25,11 +28,12 @@ If you like, you can reset a BC-780-XLT to factory settings by powering off,
 then holding down 2, 9 and "MAN" keys while powering on.  The scanner
 will set the serial port to 9600, which is what Mellow Elephant uses.
 
-Look at the scanner display ![](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/bc_780_display.png).  
+Look at the scanner display. ![](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/bc_780_display.png)
 
-Do you see "RMT" (in the square)?  If so, 
-you are all ready for "Remote" mode.  If not, press "E" for 2 seconds and
-"RMT" should appear.
+Do you see "RMT" (in the square)?  If so, you are all ready for "Remote" mode.  If not, press "E" for 2 seconds and "RMT" should appear.
+
+With the radio configured and cabled to your linux host, you are ready to try Mellow Elephant application.  Clone the repository to your local machine.
+
 
  
 
