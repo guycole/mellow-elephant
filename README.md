@@ -24,43 +24,39 @@ getting started
 
 Ready to put an old radio to work?  You will need a RS-232 cable and (probably) a USB to RS-232 converter.  Here are some [cabling instructions](https://www.manualslib.com/manual/185050/Uniden-Bc780xlt.html?page=73)
 
-If you like, you can reset a BC-780-XLT to factory settings by powering off,
-then holding down 2, 9 and "MAN" keys while powering on.  The scanner
-will set the serial port to 9600, which is what Mellow Elephant uses.
+If you like, you can reset a BC-780-XLT to factory settings by powering off, then holding down 2, 9 and "MAN" keys while powering on.  The scanner will set the serial port to 9600, which is what Mellow Elephant uses.
 
 Look at the scanner display. ![](https://github.com/guycole/mellow-elephant/blob/master/dox/grafix/bc_780_display.png)
 
 Do you see "RMT" (in the square)?  If so, you are all ready for "Remote" mode.  If not, press "E" for 2 seconds and "RMT" should appear.
 
-With the radio configured and cabled to your linux host, you are ready to try Mellow Elephant application.  Clone the repository to your local machine.
+With the radio configured, plug it into your USB port.  Discover the USB assignment using dmesg or similar.  You should see something like "/dev/ttyUSB0" was assigned. 
 
+Clone the repository to your local machine.
 
- 
+You will need python3 to use Mellow Elephant, type 'which python3' to discover location
 
+cd to src directory and type 'virtualenv -p /usr/local/bin/python3 venv' where "/usr/local/bin/python3" is replaced by the actual location of python3 on your machine.
 
+Type 'source venv/bin/activate'
 
+In the "bin" directory you will see the file "serial_test.yaml", update the "serialDevice" to reflect your USB port assignment
 
-Place the mellow-elephant sources on a 
-raspberry pi and cable the rpi w/your BC-780-XLT.
+Also in the "bin" directory, update "serial_test_usb0.sh" to reflect your path.
 
-Place the BC-780-XLT in "RMT" mode.
-
-Establish RS-232 configuration.
-
-Test (need test application)
-
-Raspberry Pi
-Cannakit "Ultimate Starter Kit" (PI3-STR32-C4-BLK-R10) 
-https://www.canakit.com/raspberry-pi-3-ultimate-kit.html
-
-apt-get update/upgrade
-apt-get install virtualenv
-
+Invoke "serial_test_usb0.sh" and if all goes well, the computer will ask BC-780-XLT for system information.  
 
 configure for collection
 ==================
 
 Uniden divided coverage into various "bands" which I also use to manage frequencies of interest.  "Bands" don't actually map to service types, but there is some overlap.  I provide a band table at the end of this file.
+
+Within the "bin" directory, there are two files: collect.yaml which is for configuration and collect_usb0.sh which runs collection.  Tweak collect.yaml to reflect the USB port (serialDevice) assignemnt and paths.  You can also decide which frequencyBands to monitor.  "collect_usb0.sh" also has a path to update.  You can start collection by invoking "collect_usb0.sh"
+
+processing collected observations
+==================
+
+Output will appear in the directory "observations/fresh".  You can process these files by 
 
 
 RS-232 
