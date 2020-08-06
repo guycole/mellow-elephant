@@ -36,9 +36,7 @@ class Processing:
     def graph_write(self, file_name, observations, band_ndx, sortie_key):
         graph_file_name = "%s/%s" % (self.graph_directory, file_name.replace('json', 'png'))
         plot_file_name = "/tmp/plot.dem"
-
         strength_file_name = "/tmp/strength.dat"
-        threshold_file_name = "/tmp/threshold.dat"
 
         bc780band_factory = BandBc780Factory()
         bc780band = bc780band_factory.factory(band_ndx)
@@ -47,17 +45,11 @@ class Processing:
 
         with open(strength_file_name, "w") as writer:
             for observation in observations:
-                strength = observation['strength']
-                frequency = observation['frequency']
-
-                writer.write("%f %d\n" % (frequency/10000.0, strength))
-
-        with open(threshold_file_name, "w") as writer:
-            for observation in observations:
                 frequency = observation['frequency']
                 moving_average = observation['moving_average']
+                strength = observation['strength']
 
-                writer.write("%f %d\n" % (frequency/10000.0, moving_average))
+                writer.write("%f %d %d\n" % (frequency/10000.0, strength, moving_average))
 
         with open(plot_file_name, "w") as writer:
             writer.write("set terminal png small\n")
@@ -66,13 +58,13 @@ class Processing:
             writer.write("set style data line\n")
             writer.write("set output '%s'\n" % graph_file_name)
             writer.write(plot_title)
-            writer.write("plot '%s' with lp, '%s' with lines\n" % (strength_file_name, threshold_file_name))
+            writer.write("plot '%s' using 1:2 with lp, '' using 1:3 with lines\n" % strength_file_name)
 
         command = "%s %s" % ('/usr/local/bin/gnuplot', plot_file_name)
         os.system(command)
 
-#        os.unlink(data_file_name)
-#        os.unlink(plot_file_name)
+        os.unlink(plot_file_name)
+        os.unlink(strength_file_name)
 
     def observation_db(self, observations, band_ndx, sortie_key, db):
         observation_file = "%s/observation.sqlite" % self.db_directory
