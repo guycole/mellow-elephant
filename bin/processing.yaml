@@ -1,8 +1,11 @@
 #
+# parent directory for fresh pickle files
 #pickleDirectory: /home/gsc/github/mellow-elephant/observations
 pickleDirectory: /Users/gsc/IdeaProjects/mellow-elephant/observations
 #
+# parent directory for sqlite3 database files
 dbDirectory: /Users/gsc/IdeaProjects/mellow-elephant/db
 #
+# destination directory for graph outputs
 grafDirectory: /Users/gsc/IdeaProjects/mellow-elephant/graphs
 #

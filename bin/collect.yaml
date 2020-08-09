@@ -1,18 +1,23 @@
 #
+# unique installation identifier
 installationId: 68c8ec34-d843-421b-8465-f375e5574ee3
 #
 # legal receiver types: bc780
 receiverType: bc780
 #
+# parent directory for fresh pickle files
 pickleDirectory: /home/gsc/github/mellow-elephant/observations
 #
+# ensure only one application per USB port
 pidLockFile: /home/gsc/github/mellow-elephant/lock.pid
 #
+# serial device port
 serialDevice: /dev/ttyUSB0
 #
 #runMode: once
 runMode: always
 #
+# map to uniden bands, see documentation
 frequencyBands:
     - 1
     - 2
