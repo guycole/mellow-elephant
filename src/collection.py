@@ -18,11 +18,11 @@ class Collection:
         logging.basicConfig(format="%(asctime)s %(message)s", level=logger_level)
 
         self.logger = logging.getLogger()
-        self.logger.debug("debug level message")
-        self.logger.info("info level message")
-        self.logger.warning("warning level message")
-        self.logger.error("error level message")
-        self.logger.critical("critical level message")
+#        self.logger.debug("debug level message")
+#        self.logger.info("info level message")
+#        self.logger.warning("warning level message")
+#        self.logger.error("error level message")
+#        self.logger.critical("critical level message")
 
         self.pickle_directory = configuration["pickleDirectory"]
         self.frequency_bands = configuration["frequencyBands"]

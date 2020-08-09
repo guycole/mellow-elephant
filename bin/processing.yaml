@@ -1,0 +1,8 @@
+#
+#pickleDirectory: /home/gsc/github/mellow-elephant/observations
+pickleDirectory: /Users/gsc/IdeaProjects/mellow-elephant/observations
+#
+dbDirectory: /Users/gsc/IdeaProjects/mellow-elephant/db
+#
+grafDirectory: /Users/gsc/IdeaProjects/mellow-elephant/graphs
+#
